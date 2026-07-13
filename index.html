@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>QR chuyển khoản - Liquid Glass</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+    <!-- ===== HEADER ===== -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <h1>✨ QR chuyển khoản</h1>
+                    <p class="subtitle">Chọn một người để lấy mã QR</p>
+                </div>
+                <div class="header-actions">
+                    <div id="authSection">
+                        <button class="btn-manage" id="manageBtn">Quản lý</button>
+                    </div>
+                    <div id="userSection" style="display:none;">
+                        <span class="user-name" id="usernameDisplay"></span>
+                        <button class="btn-logout" id="logoutBtn">Đăng xuất</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- ===== MAIN ===== -->
+    <main class="container">
+
+        <!-- ===== SEARCH ===== -->
+        <div class="search-section">
+            <div class="search-box">
+                <span class="search-icon">🔍</span>
+                <input type="text" id="searchInput" placeholder="Tìm theo tên..." />
+            </div>
+        </div>
+
+        <!-- ===== UPLOAD BUTTON ===== -->
+        <div class="upload-area" id="uploadArea" style="display:none;">
+            <button class="btn-upload" id="uploadBtn">➕ Thêm mã QR mới</button>
+        </div>
+
+        <!-- ===== DANH SÁCH NGƯỜI DÙNG ===== -->
+        <section class="user-list" id="userList"></section>
+
+        <!-- ===== EMPTY STATE ===== -->
+        <div class="empty-state" id="emptyState" style="display:none;">
+            <span>📭</span>
+            <p>Chưa có mã QR nào. Hãy đăng nhập để thêm mới!</p>
+        </div>
+
+    </main>
+
+    <!-- ===== MODAL CHI TIẾT ===== -->
+    <div class="modal" id="detailModal">
+        <div class="modal-content detail-modal" id="detailContent"></div>
+    </div>
+
+    <!-- ===== MODAL UPLOAD ===== -->
+    <div class="modal" id="uploadModal">
+        <div class="modal-content upload-modal">
+            <span class="modal-close" id="uploadModalClose">&times;</span>
+            <h2 class="modal-title">📝 Thêm mã QR mới</h2>
+            <form id="uploadForm">
+                <div class="form-group">
+                    <label>Tên người nhận <span class="required">*</span></label>
+                    <input type="text" id="qrName" placeholder="Tên người nhận" required />
+                </div>
+                <div class="form-group">
+                    <label>Tên ngân hàng <span class="required">*</span></label>
+                    <div class="select-wrapper">
+                        <select id="qrBank" required>
+                            <option value="" disabled selected>Chọn ngân hàng...</option>
+                            <option value="Techcombank">Techcombank</option>
+                            <option value="Vietcombank">Vietcombank</option>
+                            <option value="BIDV">BIDV</option>
+                            <option value="MB Bank">MB Bank</option>
+                            <option value="VPBank">VPBank</option>
+                            <option value="TPBANK">TPBANK</option>
+                            <option value="MoMo">MoMo</option>
+                            <option value="VietinBank">VietinBank</option>
+                            <option value="ACB">ACB</option>
+                            <option value="Sacombank">Sacombank</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Số tài khoản <span class="optional">(không bắt buộc)</span></label>
+                    <input type="text" id="qrAccount" placeholder="Số tài khoản" />
+                </div>
+                <div class="form-group">
+                    <label>Chủ tài khoản <span class="optional">(không bắt buộc)</span></label>
+                    <input type="text" id="qrHolder" placeholder="Tên chủ tài khoản" />
+                </div>
+                <div class="form-group">
+                    <label>Ảnh mã QR <span class="required">*</span></label>
+                    <div class="upload-image-box" id="uploadImageBox">
+                        <span>📤 Nhấn để chọn ảnh</span>
+                        <input type="file" id="qrImage" accept="image/*" required />
+                    </div>
+                    <div class="preview-container" id="previewContainer" style="display:none;">
+                        <img id="imagePreview" src="" alt="Preview" />
+                    </div>
+                </div>
+                <button type="submit" class="btn-submit">💾 Lưu mã QR</button>
+            </form>
+        </div>
+    </div>
+
+
+    <!-- ===== MODAL AUTH ===== -->
+    <div class="modal" id="authModal">
+        <div class="modal-content auth-modal" id="authFormContainer"></div>
+    </div>
+
+    <!-- ===== FILE INPUT HIDDEN ===== -->
+    <input type="file" id="fileInput" accept="image/*" style="display:none;" />
+
+    <script src="script.js"></script>
+</body>
+</html>
