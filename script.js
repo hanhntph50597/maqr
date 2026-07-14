@@ -711,12 +711,12 @@ uploadForm.addEventListener('submit', async function(e) {
     // ===== VALIDATE =====
     
     if (!name) {
-        showToast('❌ Vui lòng nhập tên người nhận!', 'error');
+        showToast(' Vui lòng nhập tên người nhận!', 'error');
         document.getElementById('qrName').focus();
         return;
     }
     if (!validateName(name)) {
-        showToast('❌ Tên người nhận chỉ được chứa chữ cái (có dấu) và khoảng trắng!', 'error');
+        showToast('Tên người nhận chỉ được chứa chữ cái (có dấu) và khoảng trắng!', 'error');
         document.getElementById('qrName').focus();
         document.getElementById('qrName').value = '';
         return;
