@@ -1,24 +1,12 @@
 // ==========================================
-// ===== DATABASE =====
+// ===== DATABASE - FIREBASE =====
 // ==========================================
 
-const DB_KEY = 'qr_bank_db';
-
-function getDB() {
-    try {
-        const data = localStorage.getItem(DB_KEY);
-        return data ? JSON.parse(data) : { users: {}, qrCodes: [] };
-    } catch {
-        return { users: {}, qrCodes: [] };
-    }
-}
-
-function saveDB(db) {
-    localStorage.setItem(DB_KEY, JSON.stringify(db));
-}
+const DB_USERS = 'users';
+const DB_QRS = 'qrCodes';
 
 // ==========================================
-// ===== AUTH =====
+// ===== AUTH - FIREBASE =====
 // ==========================================
 
 let currentUser = null;
@@ -32,34 +20,51 @@ function hashPassword(password) {
     return 'hashed_' + hash;
 }
 
-function registerUser(username, password) {
-    const db = getDB();
-    if (db.users[username]) {
-        return { success: false, message: 'Tên đăng nhập đã tồn tại!' };
-    }
+// ===== ĐĂNG KÝ =====
+async function registerUser(username, password) {
     if (username.length < 3) {
         return { success: false, message: 'Tên phải có ít nhất 3 ký tự!' };
     }
     if (password.length < 4) {
         return { success: false, message: 'Mật khẩu phải có ít nhất 4 ký tự!' };
     }
-    db.users[username] = { password: hashPassword(password) };
-    saveDB(db);
-    return { success: true, message: 'Đăng ký thành công!' };
+    
+    try {
+        const snapshot = await database.ref(`${DB_USERS}/${username}`).once('value');
+        if (snapshot.exists()) {
+            return { success: false, message: 'Tên đăng nhập đã tồn tại!' };
+        }
+        
+        await database.ref(`${DB_USERS}/${username}`).set({
+            password: hashPassword(password)
+        });
+        return { success: true, message: 'Đăng ký thành công!' };
+    } catch (error) {
+        console.error('Lỗi đăng ký:', error);
+        return { success: false, message: 'Lỗi kết nối: ' + error.message };
+    }
 }
 
-function loginUser(username, password) {
-    const db = getDB();
-    const user = db.users[username];
-    if (!user) {
-        return { success: false, message: 'Tên đăng nhập không tồn tại!' };
+// ===== ĐĂNG NHẬP =====
+async function loginUser(username, password) {
+    try {
+        const snapshot = await database.ref(`${DB_USERS}/${username}`).once('value');
+        if (!snapshot.exists()) {
+            return { success: false, message: 'Tên đăng nhập không tồn tại!' };
+        }
+        
+        const user = snapshot.val();
+        if (user.password !== hashPassword(password)) {
+            return { success: false, message: 'Mật khẩu không đúng!' };
+        }
+        
+        currentUser = username;
+        localStorage.setItem('qr_current_user', username);
+        return { success: true, message: 'Đăng nhập thành công!' };
+    } catch (error) {
+        console.error('Lỗi đăng nhập:', error);
+        return { success: false, message: 'Lỗi kết nối: ' + error.message };
     }
-    if (user.password !== hashPassword(password)) {
-        return { success: false, message: 'Mật khẩu không đúng!' };
-    }
-    currentUser = username;
-    localStorage.setItem('qr_current_user', username);
-    return { success: true, message: 'Đăng nhập thành công!' };
 }
 
 function logoutUser() {
@@ -69,7 +74,7 @@ function logoutUser() {
 
 function checkSession() {
     const saved = localStorage.getItem('qr_current_user');
-    if (saved && getDB().users[saved]) {
+    if (saved) {
         currentUser = saved;
         return true;
     }
@@ -77,30 +82,49 @@ function checkSession() {
 }
 
 // ==========================================
-// ===== QR CODE CRUD =====
+// ===== QR CODE - FIREBASE =====
 // ==========================================
 
-function getQRList() {
-    return getDB().qrCodes || [];
+async function getQRList() {
+    try {
+        const snapshot = await database.ref(DB_QRS).once('value');
+        const data = snapshot.val();
+        if (data) {
+            return Object.keys(data).map(key => ({
+                id: key,
+                ...data[key]
+            }));
+        }
+        return [];
+    } catch (error) {
+        console.error('Lỗi lấy dữ liệu:', error);
+        return [];
+    }
 }
 
-function addQRCode(data) {
-    const db = getDB();
-    const newQR = {
-        id: Date.now().toString(36) + Math.random().toString(36).substr(2, 5),
-        ...data,
-        uploadedBy: currentUser,
-        uploadedAt: new Date().toISOString()
-    };
-    db.qrCodes.push(newQR);
-    saveDB(db);
-    return newQR;
+async function addQRCode(data) {
+    try {
+        const newQR = {
+            ...data,
+            uploadedBy: currentUser,
+            uploadedAt: new Date().toISOString()
+        };
+        const newRef = await database.ref(DB_QRS).push(newQR);
+        return { id: newRef.key, ...newQR };
+    } catch (error) {
+        console.error('Lỗi thêm dữ liệu:', error);
+        return null;
+    }
 }
 
-function deleteQRCode(id) {
-    const db = getDB();
-    db.qrCodes = db.qrCodes.filter(q => q.id !== id);
-    saveDB(db);
+async function deleteQRCode(id) {
+    try {
+        await database.ref(`${DB_QRS}/${id}`).remove();
+        return true;
+    } catch (error) {
+        console.error('Lỗi xóa dữ liệu:', error);
+        return false;
+    }
 }
 
 // ==========================================
@@ -163,8 +187,8 @@ function getInitials(name) {
 // ===== RENDER USER LIST =====
 // ==========================================
 
-function renderUserList(filter = '') {
-    const qrs = getQRList();
+async function renderUserList(filter = '') {
+    const qrs = await getQRList();
     const filtered = qrs.filter(qr => 
         qr.name.toLowerCase().includes(filter.toLowerCase())
     );
@@ -199,8 +223,10 @@ function renderUserList(filter = '') {
     document.querySelectorAll('.user-item').forEach(item => {
         item.addEventListener('click', function() {
             const id = this.dataset.id;
-            const qr = getQRList().find(q => q.id === id);
-            if (qr) showDetail(qr);
+            getQRList().then(qrs => {
+                const qr = qrs.find(q => q.id === id);
+                if (qr) showDetail(qr);
+            });
         });
     });
 }
@@ -244,16 +270,13 @@ function showDetail(qr) {
             <span class="detail-value">${qr.bank}</span>
         </div>
         
-        ${isOwner ? `
-            <div class="detail-actions">
+        <div class="detail-actions">
+            <button class="btn-transfer" onclick="openTransfer('${qr.id}')">💳 Chuyển khoản</button>
+            ${isOwner ? `
                 <button class="btn-delete" onclick="deleteQR('${qr.id}')">🗑️ Xóa mã QR</button>
-                <button class="btn-close-detail" onclick="closeDetail()">Đóng</button>
-            </div>
-        ` : `
-            <div class="detail-actions">
-                <button class="btn-close-detail" onclick="closeDetail()" style="width:100%;">Đóng</button>
-            </div>
-        `}
+            ` : ''}
+            <button class="btn-close-detail" onclick="closeDetail()">Đóng</button>
+        </div>
     `;
     
     detailModal.style.display = 'flex';
@@ -279,15 +302,15 @@ function copyText(text) {
     });
 }
 
-function deleteQR(id) {
+async function deleteQR(id) {
     if (!confirm('Bạn có chắc muốn xóa mã QR này?')) return;
-    deleteQRCode(id);
+    await deleteQRCode(id);
     closeDetail();
     renderUserList(searchInput.value);
 }
 
 // ==========================================
-// ===== UPLOAD QR - KHÔNG CẮT ẢNH =====
+// ===== UPLOAD QR =====
 // ==========================================
 
 uploadBtn.addEventListener('click', function() {
@@ -321,7 +344,7 @@ qrImage.addEventListener('change', function() {
     }
 });
 
-uploadForm.addEventListener('submit', function(e) {
+uploadForm.addEventListener('submit', async function(e) {
     e.preventDefault();
     
     if (!currentUser) {
@@ -335,37 +358,32 @@ uploadForm.addEventListener('submit', function(e) {
     const holder = document.getElementById('qrHolder').value.trim();
     const imageFile = document.getElementById('qrImage').files[0];
     
-    // Kiểm tra 3 trường bắt buộc
     if (!name) {
         alert('❌ Vui lòng nhập tên người nhận!');
         document.getElementById('qrName').focus();
         return;
     }
-    
     if (!bank) {
         alert('❌ Vui lòng chọn tên ngân hàng!');
         document.getElementById('qrBank').focus();
         return;
     }
-    
     if (!imageFile) {
         alert('❌ Vui lòng chọn ảnh mã QR!');
         return;
     }
     
-    // Các trường KHÔNG bắt buộc
     const finalAccount = account || 'Chưa cập nhật';
     const finalHolder = holder || name.toUpperCase();
     
-    // Đọc file và lưu nguyên ảnh gốc (KHÔNG CẮT)
     const reader = new FileReader();
-    reader.onload = function(e) {
-        addQRCode({
+    reader.onload = async function(e) {
+        await addQRCode({
             name: name,
             bank: bank,
             accountNumber: finalAccount,
             accountHolder: finalHolder,
-            imageData: e.target.result // Lưu ảnh gốc
+            imageData: e.target.result
         });
         
         uploadModal.style.display = 'none';
@@ -386,7 +404,7 @@ function updateUI() {
     if (currentUser) {
         authSection.style.display = 'none';
         userSection.style.display = 'flex';
-        usernameDisplay.textContent = currentUser;
+        usernameDisplay.textContent = '👤 ' + currentUser;
         uploadArea.style.display = 'block';
     } else {
         authSection.style.display = 'block';
@@ -478,7 +496,7 @@ function renderAuthForm() {
     }
 }
 
-function handleAuthSubmit() {
+async function handleAuthSubmit() {
     const username = document.getElementById('authUsername').value.trim();
     const password = document.getElementById('authPassword').value.trim();
     const errorEl = document.getElementById('authError');
@@ -493,9 +511,9 @@ function handleAuthSubmit() {
 
     let result;
     if (isLoginMode) {
-        result = loginUser(username, password);
+        result = await loginUser(username, password);
     } else {
-        result = registerUser(username, password);
+        result = await registerUser(username, password);
     }
 
     if (result.success) {
@@ -549,6 +567,6 @@ window.addEventListener('click', function(e) {
 
 checkSession();
 updateUI();
-console.log('✨ QR Bank Storage - Liquid Glass đã sẵn sàng!');
+console.log('✨ QR Bank Storage - Firebase đã sẵn sàng!');
 console.log('👤 User:', currentUser || 'Chưa đăng nhập');
 console.log('📊 Số QR:', getQRList().length);
