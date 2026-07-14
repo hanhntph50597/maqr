@@ -765,7 +765,6 @@ uploadForm.addEventListener('submit', async function(e) {
         previewContainer.style.display = 'none';
         uploadImageBox.style.display = 'block';
         renderUserList(searchInput.value);
-        showToast('✅ Đã thêm mã QR thành công!', 'success');
     };
     reader.readAsDataURL(imageFile);
 });
