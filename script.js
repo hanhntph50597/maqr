@@ -602,7 +602,7 @@ async function deleteQR(id) {
     await deleteQRCode(id);
     closeDetail();
     renderUserList(searchInput.value);
-    showToast('Đã xóa mã QR thành công!', 'success');
+    showToast('Đã xóa mã QR thành công!');
 }
 
 // ==========================================
@@ -765,7 +765,6 @@ document.addEventListener('paste', function(e) {
                     const dataTransfer = new DataTransfer();
                     dataTransfer.items.add(file);
                     document.getElementById('qrImage').files = dataTransfer.files;
-                    showToast('Đã dán ảnh từ clipboard!', 'success');
                 };
                 reader.readAsDataURL(file);
                 break;
@@ -827,7 +826,7 @@ uploadForm.addEventListener('submit', async function(e) {
     }
     
     // ===== VALIDATE ẢNH MÃ QR =====
-    showToast('⏳ Đang kiểm tra ảnh...', 'info');
+    showToast('Đang kiểm tra ảnh...', 'info');
     
     const result = await validateQRImage(imageFile);
     if (!result.valid) {
@@ -861,7 +860,7 @@ uploadForm.addEventListener('submit', async function(e) {
         previewContainer.style.display = 'none';
         uploadImageBox.style.display = 'block';
         renderUserList(searchInput.value);
-        showToast(' Đã thêm mã QR thành công!', 'success');
+        showToast(' Đã thêm mã QR thành công!');
     };
     reader.readAsDataURL(imageFile);
 });
