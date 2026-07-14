@@ -271,9 +271,9 @@ function showDetail(qr) {
         </div>
         
         <div class="detail-actions">
-            <button class="btn-transfer" onclick="openTransfer('${qr.id}')">💳 Chuyển khoản</button>
+            <button class="btn-transfer" onclick="openTransfer('${qr.id}')">Chuyển khoản</button>
             ${isOwner ? `
-                <button class="btn-delete" onclick="deleteQR('${qr.id}')">🗑️ Xóa mã QR</button>
+                <button class="btn-delete" onclick="deleteQR('${qr.id}')">Xóa mã QR</button>
             ` : ''}
             <button class="btn-close-detail" onclick="closeDetail()">Đóng</button>
         </div>

@@ -675,10 +675,6 @@ header {
         border-radius: 20px;
     }
     
-    .detail-actions {
-        flex-direction: column;
-    }
-    
     .upload-image-box {
         padding: 20px 16px;
         font-size: 0.9rem;
@@ -800,54 +796,60 @@ header {
     transform: scale(1.05);
 }
 
+/* ===== DETAIL ACTIONS - KHÔNG XUỐNG DÒNG ===== */
 .detail-actions {
     display: flex;
-    gap: 10px;
+    gap: 8px;
     margin-top: 16px;
+    flex-wrap: nowrap;
 }
 
-/* ===== NÚT CHUYỂN KHOẢN - LIQUID GLASS ===== */
 .detail-actions .btn-transfer {
     flex: 1;
-    padding: 12px 20px;
+    padding: 10px 12px;
     background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(5, 150, 105, 0.2));
     color: #6ee7b7;
     border: 1px solid rgba(16, 185, 129, 0.3);
-    border-radius: 14px;
+    border-radius: 12px;
     font-weight: 600;
-    font-size: 0.95rem;
+    font-size: 0.85rem;
     cursor: pointer;
     transition: all 0.3s ease;
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     text-shadow: 0 0 20px rgba(16, 185, 129, 0.2);
+    white-space: nowrap;
+    text-align: center;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .detail-actions .btn-transfer:hover {
     background: linear-gradient(135deg, rgba(16, 185, 129, 0.35), rgba(5, 150, 105, 0.35));
-    transform: translateY(-2px) scale(1.02);
+    transform: translateY(-2px);
     box-shadow: 0 8px 30px rgba(16, 185, 129, 0.25);
     border-color: rgba(16, 185, 129, 0.5);
 }
 
-.detail-actions .btn-transfer:active {
-    transform: scale(0.97);
-}
-
-/* ===== NÚT XÓA - LIQUID GLASS ===== */
 .detail-actions .btn-delete {
     flex: 1;
-    padding: 12px 20px;
+    padding: 10px 12px;
     background: rgba(239, 68, 68, 0.15);
     color: #fca5a5;
     border: 1px solid rgba(239, 68, 68, 0.2);
-    border-radius: 14px;
+    border-radius: 12px;
     font-weight: 600;
-    font-size: 0.95rem;
+    font-size: 0.85rem;
     cursor: pointer;
     transition: all 0.3s ease;
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
+    white-space: nowrap;
+    text-align: center;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .detail-actions .btn-delete:hover {
@@ -856,20 +858,24 @@ header {
     box-shadow: 0 8px 30px rgba(239, 68, 68, 0.2);
 }
 
-/* ===== NÚT ĐÓNG - LIQUID GLASS ===== */
 .detail-actions .btn-close-detail {
     flex: 1;
-    padding: 12px 20px;
+    padding: 10px 12px;
     background: rgba(255, 255, 255, 0.05);
     color: rgba(255, 255, 255, 0.6);
     border: 1px solid rgba(255, 255, 255, 0.05);
-    border-radius: 14px;
+    border-radius: 12px;
     font-weight: 600;
-    font-size: 0.95rem;
+    font-size: 0.85rem;
     cursor: pointer;
     transition: all 0.3s ease;
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
+    white-space: nowrap;
+    text-align: center;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .detail-actions .btn-close-detail:hover {
