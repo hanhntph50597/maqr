@@ -166,7 +166,6 @@ function validateHolder(holder) {
 
 function validateQRImage(file) {
     return new Promise((resolve) => {
-        // 1. Kiểm tra định dạng file
         const validTypes = ['image/png', 'image/jpeg', 'image/webp', 'image/gif'];
         if (!validTypes.includes(file.type)) {
             resolve({ 
@@ -176,7 +175,6 @@ function validateQRImage(file) {
             return;
         }
         
-        // 2. Kiểm tra kích thước (tối đa 5MB)
         if (file.size > 5 * 1024 * 1024) {
             resolve({ 
                 valid: false, 
@@ -185,7 +183,6 @@ function validateQRImage(file) {
             return;
         }
         
-        // 3. Kiểm tra kích thước ảnh
         const img = new Image();
         img.onload = function() {
             const ratio = this.width / this.height;
@@ -207,7 +204,6 @@ function validateQRImage(file) {
                 return;
             }
             
-            // Kiểm tra tỷ lệ khung hình (QR code thường là hình vuông)
             if (!isSquare) {
                 console.warn('Ảnh không có tỷ lệ vuông, có thể không phải mã QR');
             }
@@ -365,14 +361,14 @@ const qrAccountError = document.getElementById('qrAccountError');
 const qrHolderError = document.getElementById('qrHolderError');
 const qrBankError = document.getElementById('qrBankError');
 
-// ===== VALIDATE TÊN NGƯỜI NHẬN (real-time) =====
+// ===== VALIDATE TÊN NGƯỜI NHẬN =====
 qrNameInput.addEventListener('input', function() {
     const value = this.value.trim();
     
     if (value && !validateName(value)) {
         this.classList.remove('success');
         this.classList.add('error');
-        qrNameError.textContent = '❌ Chỉ được chứa chữ cái (có dấu) và khoảng trắng!';
+        qrNameError.textContent = 'Chỉ được chứa chữ cái (có dấu) và khoảng trắng!';
         qrNameError.classList.add('show');
     } else if (value && validateName(value)) {
         this.classList.remove('error');
@@ -380,7 +376,7 @@ qrNameInput.addEventListener('input', function() {
         qrNameError.classList.remove('show');
     } else {
         this.classList.remove('error', 'success');
-        qrNameError.textContent = '⚠️ Vui lòng nhập tên người nhận!';
+        qrNameError.textContent = 'Vui lòng nhập tên người nhận!';
         qrNameError.classList.add('show');
     }
 });
@@ -390,19 +386,19 @@ qrNameInput.addEventListener('blur', function() {
     if (!value) {
         this.classList.remove('success');
         this.classList.add('error');
-        qrNameError.textContent = '⚠️ Vui lòng nhập tên người nhận!';
+        qrNameError.textContent = 'Vui lòng nhập tên người nhận!';
         qrNameError.classList.add('show');
     }
 });
 
-// ===== VALIDATE SỐ TÀI KHOẢN (real-time) =====
+// ===== VALIDATE SỐ TÀI KHOẢN =====
 qrAccountInput.addEventListener('input', function() {
     const value = this.value.trim();
     
     if (value && !validateAccountNumber(value)) {
         this.classList.remove('success');
         this.classList.add('error');
-        qrAccountError.textContent = '❌ Số tài khoản chỉ được chứa chữ số!';
+        qrAccountError.textContent = 'Số tài khoản chỉ được chứa chữ số!';
         qrAccountError.classList.add('show');
     } else if (value && validateAccountNumber(value)) {
         this.classList.remove('error');
@@ -414,14 +410,14 @@ qrAccountInput.addEventListener('input', function() {
     }
 });
 
-// ===== VALIDATE CHỦ TÀI KHOẢN (real-time) =====
+// ===== VALIDATE CHỦ TÀI KHOẢN =====
 qrHolderInput.addEventListener('input', function() {
     const value = this.value.trim();
     
     if (value && !validateHolder(value)) {
         this.classList.remove('success');
         this.classList.add('error');
-        qrHolderError.textContent = '❌ Chỉ được chứa chữ in hoa, không dấu và khoảng trắng! (VD: NGUYEN VAN A)';
+        qrHolderError.textContent = 'Chỉ được chứa chữ in hoa, không dấu và khoảng trắng! (VD: NGUYEN VAN A)';
         qrHolderError.classList.add('show');
     } else if (value && validateHolder(value)) {
         this.classList.remove('error');
@@ -433,7 +429,7 @@ qrHolderInput.addEventListener('input', function() {
     }
 });
 
-// ===== VALIDATE NGÂN HÀNG (real-time) =====
+// ===== VALIDATE NGÂN HÀNG =====
 qrBankSelect.addEventListener('change', function() {
     if (this.value) {
         this.classList.remove('error');
@@ -442,7 +438,7 @@ qrBankSelect.addEventListener('change', function() {
     } else {
         this.classList.remove('success');
         this.classList.add('error');
-        qrBankError.textContent = '⚠️ Vui lòng chọn tên ngân hàng!';
+        qrBankError.textContent = 'Vui lòng chọn tên ngân hàng!';
         qrBankError.classList.add('show');
     }
 });
@@ -671,7 +667,7 @@ if (transferForm) {
         e.preventDefault();
         
         if (!currentTransferQR) {
-            showToast('❌ Lỗi: Không tìm thấy thông tin chuyển khoản!', 'error');
+            showToast('Lỗi: Không tìm thấy thông tin chuyển khoản!', 'error');
             return;
         }
         
@@ -681,7 +677,7 @@ if (transferForm) {
         const content = transferContent ? transferContent.value.trim() || 'Chuyển khoản' : 'Chuyển khoản';
         
         if (!amount || parseInt(amount) < 1000) {
-            showToast('❌ Vui lòng nhập số tiền (tối thiểu 1,000 VNĐ)!', 'error');
+            showToast('Vui lòng nhập số tiền (tối thiểu 1,000 VNĐ)!', 'error');
             if (transferAmount) transferAmount.focus();
             return;
         }
@@ -689,14 +685,14 @@ if (transferForm) {
         const amountNum = parseInt(amount);
         const formattedAmount = amountNum.toLocaleString('vi-VN') + ' VNĐ';
         
-        if (!confirm(`✅ Xác nhận chuyển khoản:\n\nNgười nhận: ${currentTransferQR.name}\nNgân hàng: ${currentTransferQR.bank}\nSố tài khoản: ${currentTransferQR.accountNumber}\nSố tiền: ${formattedAmount}\nNội dung: ${content}\n\nBấm OK để tiếp tục.`)) {
+        if (!confirm(`Xác nhận chuyển khoản:\n\nNgười nhận: ${currentTransferQR.name}\nNgân hàng: ${currentTransferQR.bank}\nSố tài khoản: ${currentTransferQR.accountNumber}\nSố tiền: ${formattedAmount}\nNội dung: ${content}\n\nBấm OK để tiếp tục.`)) {
             return;
         }
         
         closeTransfer();
         closeDetail();
         
-        showToast(`📱 Vui lòng mở ứng dụng ${currentTransferQR.bank} để chuyển khoản`, 'info');
+        showToast(`Vui lòng mở ứng dụng ${currentTransferQR.bank} để chuyển khoản`, 'info');
     });
 }
 
@@ -715,34 +711,59 @@ uploadBtn.addEventListener('click', function() {
 uploadModalClose.addEventListener('click', function() {
     uploadModal.style.display = 'none';
     uploadForm.reset();
-    previewContainer.style.display = 'none';
-    uploadImageBox.style.display = 'block';
+    previewContainer.classList.remove('show');
+    uploadImageBox.classList.remove('hidden');
+    qrImage.value = '';
+    imagePreview.src = '';
 });
 
 // ===== UPLOAD IMAGE - TỐI ƯU CHO MOBILE =====
 uploadImageBox.addEventListener('click', function(e) {
     e.preventDefault();
     e.stopPropagation();
-    document.getElementById('qrImage').click();
+    qrImage.click();
 });
 
-// Ngăn chặn sự kiện click từ input file lan ra ngoài
-document.getElementById('qrImage').addEventListener('click', function(e) {
+qrImage.addEventListener('click', function(e) {
     e.stopPropagation();
 });
 
 qrImage.addEventListener('change', function(e) {
     e.stopPropagation();
     if (this.files && this.files[0]) {
+        const file = this.files[0];
+        
+        if (file.size > 5 * 1024 * 1024) {
+            showToast('Ảnh quá lớn! Tối đa 5MB.', 'error');
+            this.value = '';
+            return;
+        }
+        
         const reader = new FileReader();
         reader.onload = function(e) {
             imagePreview.src = e.target.result;
-            previewContainer.style.display = 'block';
-            uploadImageBox.style.display = 'none';
+            previewContainer.classList.add('show');
+            uploadImageBox.classList.add('hidden');
+            showToast('Đã chọn ảnh thành công!', 'success');
         };
-        reader.readAsDataURL(this.files[0]);
+        reader.onerror = function() {
+            showToast('Lỗi đọc ảnh! Vui lòng thử lại.', 'error');
+        };
+        reader.readAsDataURL(file);
     }
 });
+
+const removeImageBtn = document.getElementById('removeImageBtn');
+if (removeImageBtn) {
+    removeImageBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        previewContainer.classList.remove('show');
+        uploadImageBox.classList.remove('hidden');
+        qrImage.value = '';
+        imagePreview.src = '';
+        showToast('Đã xóa ảnh!', 'info');
+    });
+}
 
 // ===== PASTE ẢNH BẰNG CTRL+V =====
 document.addEventListener('paste', function(e) {
@@ -759,17 +780,29 @@ document.addEventListener('paste', function(e) {
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     imagePreview.src = e.target.result;
-                    previewContainer.style.display = 'block';
-                    uploadImageBox.style.display = 'none';
+                    previewContainer.classList.add('show');
+                    uploadImageBox.classList.add('hidden');
                     
                     const dataTransfer = new DataTransfer();
                     dataTransfer.items.add(file);
-                    document.getElementById('qrImage').files = dataTransfer.files;
+                    qrImage.files = dataTransfer.files;
+                    showToast('Đã dán ảnh từ clipboard!', 'success');
                 };
                 reader.readAsDataURL(file);
                 break;
             }
         }
+    }
+});
+
+window.addEventListener('click', function(e) {
+    if (e.target === uploadModal) {
+        uploadModal.style.display = 'none';
+        uploadForm.reset();
+        previewContainer.classList.remove('show');
+        uploadImageBox.classList.remove('hidden');
+        qrImage.value = '';
+        imagePreview.src = '';
     }
 });
 
@@ -787,57 +820,54 @@ uploadForm.addEventListener('submit', async function(e) {
     const holder = document.getElementById('qrHolder').value.trim();
     const imageFile = document.getElementById('qrImage').files[0];
     
-    // ===== VALIDATE TEXT FIELDS =====
     if (!name) {
-        showToast('❌ Vui lòng nhập tên người nhận!', 'error');
+        showToast('Vui lòng nhập tên người nhận!', 'error');
         document.getElementById('qrName').focus();
         return;
     }
     if (!validateName(name)) {
-        showToast('❌ Tên người nhận chỉ được chứa chữ cái (có dấu) và khoảng trắng!', 'error');
+        showToast('Tên người nhận chỉ được chứa chữ cái (có dấu) và khoảng trắng!', 'error');
         document.getElementById('qrName').focus();
         document.getElementById('qrName').value = '';
         return;
     }
     
     if (!bank) {
-        showToast('❌ Vui lòng chọn tên ngân hàng!', 'error');
+        showToast('Vui lòng chọn tên ngân hàng!', 'error');
         document.getElementById('qrBank').focus();
         return;
     }
     
     if (account && !validateAccountNumber(account)) {
-        showToast('❌ Số tài khoản chỉ được chứa chữ số!', 'error');
+        showToast('Số tài khoản chỉ được chứa chữ số!', 'error');
         document.getElementById('qrAccount').focus();
         document.getElementById('qrAccount').value = '';
         return;
     }
     
     if (holder && !validateHolder(holder)) {
-        showToast('❌ Chủ tài khoản chỉ được chứa chữ in hoa, không dấu và khoảng trắng! (VD: NGUYEN VAN A)', 'error');
+        showToast('Chủ tài khoản chỉ được chứa chữ in hoa, không dấu và khoảng trắng! (VD: NGUYEN VAN A)', 'error');
         document.getElementById('qrHolder').focus();
         document.getElementById('qrHolder').value = '';
         return;
     }
     
     if (!imageFile) {
-        showToast('❌ Vui lòng chọn ảnh mã QR!', 'error');
+        showToast('Vui lòng chọn ảnh mã QR!', 'error');
         return;
     }
     
-    // ===== VALIDATE ẢNH MÃ QR =====
     showToast('Đang kiểm tra ảnh...', 'info');
     
     const result = await validateQRImage(imageFile);
     if (!result.valid) {
         showToast(result.message, 'error');
-        document.getElementById('qrImage').value = '';
-        previewContainer.style.display = 'none';
-        uploadImageBox.style.display = 'block';
+        qrImage.value = '';
+        previewContainer.classList.remove('show');
+        uploadImageBox.classList.remove('hidden');
         return;
     }
     
-    // Kiểm tra thêm nếu ảnh không vuông
     if (!result.isSquare) {
         console.warn('Ảnh không có tỷ lệ vuông, có thể không phải mã QR');
     }
@@ -857,10 +887,10 @@ uploadForm.addEventListener('submit', async function(e) {
         
         uploadModal.style.display = 'none';
         uploadForm.reset();
-        previewContainer.style.display = 'none';
-        uploadImageBox.style.display = 'block';
+        previewContainer.classList.remove('show');
+        uploadImageBox.classList.remove('hidden');
         renderUserList(searchInput.value);
-        showToast(' Đã thêm mã QR thành công!');
+        showToast('Đã thêm mã QR thành công!');
     };
     reader.readAsDataURL(imageFile);
 });
@@ -1023,12 +1053,6 @@ searchInput.addEventListener('input', function() {
 
 window.addEventListener('click', function(e) {
     if (e.target === detailModal) closeDetail();
-    if (e.target === uploadModal) {
-        uploadModal.style.display = 'none';
-        uploadForm.reset();
-        previewContainer.style.display = 'none';
-        uploadImageBox.style.display = 'block';
-    }
     if (e.target === authModal) closeAuthModal();
 });
 
@@ -1038,9 +1062,9 @@ window.addEventListener('click', function(e) {
 
 checkSession();
 updateUI();
-console.log('✨ QR Bank Storage - Firebase đã sẵn sàng!');
-console.log('👤 User:', currentUser || 'Chưa đăng nhập');
-console.log('📊 Số QR:', getQRList().length);
+console.log('QR Bank Storage - Firebase đã sẵn sàng!');
+console.log('User:', currentUser || 'Chưa đăng nhập');
+console.log('Số QR:', getQRList().length);
 if (isAdmin()) {
     console.log('Admin mode: Bạn có thể xóa tất cả ảnh!');
 }
