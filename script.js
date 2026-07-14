@@ -10,6 +10,8 @@ const DB_QRS = 'qrCodes';
 // ==========================================
 
 let currentUser = null;
+const ADMIN_USER = 'hanhnt';
+const ADMIN_PASS = '1234';
 
 function hashPassword(password) {
     let hash = 0;
@@ -18,6 +20,11 @@ function hashPassword(password) {
         hash = hash & hash;
     }
     return 'hashed_' + hash;
+}
+
+// ===== KIỂM TRA ADMIN =====
+function isAdmin() {
+    return currentUser === ADMIN_USER;
 }
 
 // ===== ĐĂNG KÝ =====
@@ -47,6 +54,13 @@ async function registerUser(username, password) {
 
 // ===== ĐĂNG NHẬP =====
 async function loginUser(username, password) {
+    // Kiểm tra tài khoản admin
+    if (username === ADMIN_USER && password === ADMIN_PASS) {
+        currentUser = ADMIN_USER;
+        localStorage.setItem('qr_current_user', ADMIN_USER);
+        return { success: true, message: 'Đăng nhập thành công (Admin)!' };
+    }
+    
     try {
         const snapshot = await database.ref(`${DB_USERS}/${username}`).once('value');
         if (!snapshot.exists()) {
@@ -128,6 +142,120 @@ async function deleteQRCode(id) {
 }
 
 // ==========================================
+// ===== VALIDATE FUNCTIONS =====
+// ==========================================
+
+function validateName(name) {
+    const regex = /^[a-zA-ZÀ-Ỹà-ỹĂăÂâĐđÊêÔôƠơƯư\s\-]+$/;
+    return regex.test(name);
+}
+
+function validateAccountNumber(account) {
+    const regex = /^[0-9]+$/;
+    return regex.test(account);
+}
+
+function validateHolder(holder) {
+    const regex = /^[A-Z\s]+$/;
+    return regex.test(holder);
+}
+
+// ==========================================
+// ===== TOAST NOTIFICATION =====
+// ==========================================
+
+function showToast(message, type = 'success') {
+    let toastContainer = document.getElementById('toastContainer');
+    if (!toastContainer) {
+        toastContainer = document.createElement('div');
+        toastContainer.id = 'toastContainer';
+        toastContainer.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-width: 380px;
+            width: 100%;
+            pointer-events: none;
+        `;
+        document.body.appendChild(toastContainer);
+    }
+
+    const toast = document.createElement('div');
+    const colors = {
+        success: 'rgba(16, 185, 129, 0.15)',
+        error: 'rgba(239, 68, 68, 0.15)',
+        warning: 'rgba(245, 158, 11, 0.15)',
+        info: 'rgba(59, 130, 246, 0.15)'
+    };
+    const borderColors = {
+        success: 'rgba(16, 185, 129, 0.3)',
+        error: 'rgba(239, 68, 68, 0.3)',
+        warning: 'rgba(245, 158, 11, 0.3)',
+        info: 'rgba(59, 130, 246, 0.3)'
+    };
+    const textColors = {
+        success: '#6ee7b7',
+        error: '#fca5a5',
+        warning: '#fcd34d',
+        info: '#93c5fd'
+    };
+    const icons = {
+        success: '✅',
+        error: '❌',
+        warning: '⚠️',
+        info: 'ℹ️'
+    };
+
+    toast.style.cssText = `
+        background: ${colors[type] || colors.success};
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid ${borderColors[type] || borderColors.success};
+        border-radius: 14px;
+        padding: 14px 20px;
+        color: ${textColors[type] || textColors.success};
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        font-size: 0.95rem;
+        font-weight: 500;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        transform: translateX(calc(100% + 40px));
+        opacity: 0;
+        transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        pointer-events: auto;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        min-height: 50px;
+    `;
+
+    toast.innerHTML = `
+        <span style="font-size: 1.2rem; flex-shrink: 0;">${icons[type] || icons.success}</span>
+        <span style="flex: 1;">${message}</span>
+    `;
+
+    toastContainer.appendChild(toast);
+
+    requestAnimationFrame(() => {
+        toast.style.transform = 'translateX(0)';
+        toast.style.opacity = '1';
+    });
+
+    setTimeout(() => {
+        toast.style.transform = 'translateX(calc(100% + 40px))';
+        toast.style.opacity = '0';
+        setTimeout(() => {
+            if (toast.parentNode) {
+                toast.parentNode.removeChild(toast);
+            }
+        }, 400);
+    }, 1500);
+}
+
+// ==========================================
 // ===== DOM ELEMENTS =====
 // ==========================================
 
@@ -141,7 +269,6 @@ const authSection = document.getElementById('authSection');
 const userSection = document.getElementById('userSection');
 const uploadArea = document.getElementById('uploadArea');
 
-// Modals
 const detailModal = document.getElementById('detailModal');
 const detailContent = document.getElementById('detailContent');
 
@@ -156,6 +283,99 @@ const uploadImageBox = document.getElementById('uploadImageBox');
 
 const authModal = document.getElementById('authModal');
 const authFormContainer = document.getElementById('authFormContainer');
+
+// ===== REAL-TIME VALIDATION =====
+const qrNameInput = document.getElementById('qrName');
+const qrAccountInput = document.getElementById('qrAccount');
+const qrHolderInput = document.getElementById('qrHolder');
+const qrBankSelect = document.getElementById('qrBank');
+
+const qrNameError = document.getElementById('qrNameError');
+const qrAccountError = document.getElementById('qrAccountError');
+const qrHolderError = document.getElementById('qrHolderError');
+const qrBankError = document.getElementById('qrBankError');
+
+// ===== VALIDATE TÊN NGƯỜI NHẬN (real-time) =====
+qrNameInput.addEventListener('input', function() {
+    const value = this.value.trim();
+    
+    if (value && !validateName(value)) {
+        this.classList.remove('success');
+        this.classList.add('error');
+        qrNameError.textContent = '❌ Chỉ được chứa chữ cái (có dấu) và khoảng trắng!';
+        qrNameError.classList.add('show');
+    } else if (value && validateName(value)) {
+        this.classList.remove('error');
+        this.classList.add('success');
+        qrNameError.classList.remove('show');
+    } else {
+        this.classList.remove('error', 'success');
+        qrNameError.textContent = '⚠️ Vui lòng nhập tên người nhận!';
+        qrNameError.classList.add('show');
+    }
+});
+
+qrNameInput.addEventListener('blur', function() {
+    const value = this.value.trim();
+    if (!value) {
+        this.classList.remove('success');
+        this.classList.add('error');
+        qrNameError.textContent = '⚠️ Vui lòng nhập tên người nhận!';
+        qrNameError.classList.add('show');
+    }
+});
+
+// ===== VALIDATE SỐ TÀI KHOẢN (real-time) =====
+qrAccountInput.addEventListener('input', function() {
+    const value = this.value.trim();
+    
+    if (value && !validateAccountNumber(value)) {
+        this.classList.remove('success');
+        this.classList.add('error');
+        qrAccountError.textContent = '❌ Số tài khoản chỉ được chứa chữ số!';
+        qrAccountError.classList.add('show');
+    } else if (value && validateAccountNumber(value)) {
+        this.classList.remove('error');
+        this.classList.add('success');
+        qrAccountError.classList.remove('show');
+    } else {
+        this.classList.remove('error', 'success');
+        qrAccountError.classList.remove('show');
+    }
+});
+
+// ===== VALIDATE CHỦ TÀI KHOẢN (real-time) =====
+qrHolderInput.addEventListener('input', function() {
+    const value = this.value.trim();
+    
+    if (value && !validateHolder(value)) {
+        this.classList.remove('success');
+        this.classList.add('error');
+        qrHolderError.textContent = '❌ Chỉ được chứa chữ in hoa, không dấu và khoảng trắng! (VD: NGUYEN VAN A)';
+        qrHolderError.classList.add('show');
+    } else if (value && validateHolder(value)) {
+        this.classList.remove('error');
+        this.classList.add('success');
+        qrHolderError.classList.remove('show');
+    } else {
+        this.classList.remove('error', 'success');
+        qrHolderError.classList.remove('show');
+    }
+});
+
+// ===== VALIDATE NGÂN HÀNG (real-time) =====
+qrBankSelect.addEventListener('change', function() {
+    if (this.value) {
+        this.classList.remove('error');
+        this.classList.add('success');
+        qrBankError.classList.remove('show');
+    } else {
+        this.classList.remove('success');
+        this.classList.add('error');
+        qrBankError.textContent = '⚠️ Vui lòng chọn tên ngân hàng!';
+        qrBankError.classList.add('show');
+    }
+});
 
 // ==========================================
 // ===== BANK COLORS =====
@@ -236,7 +456,7 @@ async function renderUserList(filter = '') {
 // ==========================================
 
 function showDetail(qr) {
-    const isOwner = currentUser === qr.uploadedBy;
+    const isOwner = currentUser === qr.uploadedBy || isAdmin();
     
     detailContent.innerHTML = `
         <span class="modal-close" id="detailClose">&times;</span>
@@ -277,6 +497,11 @@ function showDetail(qr) {
             ` : ''}
             <button class="btn-close-detail" onclick="closeDetail()">Đóng</button>
         </div>
+        ${isAdmin() && !(currentUser === qr.uploadedBy) ? `
+            <div style="text-align:center; margin-top:8px; font-size:0.7rem; color:rgba(255,255,255,0.3);">
+                Admin - Xóa được ảnh của người khác
+            </div>
+        ` : ''}
     `;
     
     detailModal.style.display = 'flex';
@@ -290,7 +515,7 @@ function closeDetail() {
 
 function copyText(text) {
     navigator.clipboard.writeText(text).then(() => {
-        alert('✅ Đã sao chép: ' + text);
+        showToast('✅ Đã sao chép: ' + text, 'success');
     }).catch(() => {
         const textarea = document.createElement('textarea');
         textarea.value = text;
@@ -298,7 +523,7 @@ function copyText(text) {
         textarea.select();
         document.execCommand('copy');
         document.body.removeChild(textarea);
-        alert('✅ Đã sao chép: ' + text);
+        showToast('✅ Đã sao chép: ' + text, 'success');
     });
 }
 
@@ -307,6 +532,102 @@ async function deleteQR(id) {
     await deleteQRCode(id);
     closeDetail();
     renderUserList(searchInput.value);
+    showToast('🗑️ Đã xóa mã QR thành công!', 'success');
+}
+
+// ==========================================
+// ===== TRANSFER =====
+// ==========================================
+
+let currentTransferQR = null;
+
+async function openTransfer(id) {
+    const qrs = await getQRList();
+    const qr = qrs.find(q => q.id === id);
+    if (!qr) return;
+    
+    currentTransferQR = qr;
+    
+    const transferInfo = document.getElementById('transferInfo');
+    if (transferInfo) {
+        transferInfo.innerHTML = `
+            <div class="info-row">
+                <span class="label">Người nhận</span>
+                <span class="value">${qr.name}</span>
+            </div>
+            <div class="info-row">
+                <span class="label">Ngân hàng</span>
+                <span class="value">${qr.bank}</span>
+            </div>
+            <div class="info-row">
+                <span class="label">Số tài khoản</span>
+                <span class="value">${qr.accountNumber}</span>
+            </div>
+            <div class="info-row">
+                <span class="label">Chủ tài khoản</span>
+                <span class="value">${qr.accountHolder}</span>
+            </div>
+        `;
+    }
+    
+    const transferAmount = document.getElementById('transferAmount');
+    const transferContent = document.getElementById('transferContent');
+    if (transferAmount) transferAmount.value = '';
+    if (transferContent) transferContent.value = '';
+    
+    const transferModal = document.getElementById('transferModal');
+    if (transferModal) transferModal.style.display = 'flex';
+}
+
+function closeTransfer() {
+    const transferModal = document.getElementById('transferModal');
+    if (transferModal) transferModal.style.display = 'none';
+    currentTransferQR = null;
+}
+
+const transferModalClose = document.getElementById('transferModalClose');
+const transferCancel = document.getElementById('transferCancel');
+if (transferModalClose) transferModalClose.addEventListener('click', closeTransfer);
+if (transferCancel) transferCancel.addEventListener('click', closeTransfer);
+
+window.addEventListener('click', function(e) {
+    const transferModal = document.getElementById('transferModal');
+    if (e.target === transferModal) closeTransfer();
+});
+
+const transferForm = document.getElementById('transferForm');
+if (transferForm) {
+    transferForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        if (!currentTransferQR) {
+            showToast('❌ Lỗi: Không tìm thấy thông tin chuyển khoản!', 'error');
+            return;
+        }
+        
+        const transferAmount = document.getElementById('transferAmount');
+        const transferContent = document.getElementById('transferContent');
+        const amount = transferAmount ? transferAmount.value.trim() : '';
+        const content = transferContent ? transferContent.value.trim() || 'Chuyển khoản' : 'Chuyển khoản';
+        
+        if (!amount || parseInt(amount) < 1000) {
+            showToast('❌ Vui lòng nhập số tiền (tối thiểu 1,000 VNĐ)!', 'error');
+            if (transferAmount) transferAmount.focus();
+            return;
+        }
+        
+        const amountNum = parseInt(amount);
+        const formattedAmount = amountNum.toLocaleString('vi-VN') + ' VNĐ';
+        
+        if (!confirm(`✅ Xác nhận chuyển khoản:\n\nNgười nhận: ${currentTransferQR.name}\nNgân hàng: ${currentTransferQR.bank}\nSố tài khoản: ${currentTransferQR.accountNumber}\nSố tiền: ${formattedAmount}\nNội dung: ${content}\n\nBấm OK để tiếp tục.`)) {
+            return;
+        }
+        
+        closeTransfer();
+        closeDetail();
+        
+        showToast(`📱 Vui lòng mở ứng dụng ${currentTransferQR.bank} để chuyển khoản`, 'info');
+    });
 }
 
 // ==========================================
@@ -315,7 +636,7 @@ async function deleteQR(id) {
 
 uploadBtn.addEventListener('click', function() {
     if (!currentUser) {
-        alert('Vui lòng đăng nhập để thêm mã QR!');
+        showToast('Vui lòng đăng nhập để thêm mã QR!', 'warning');
         return;
     }
     uploadModal.style.display = 'flex';
@@ -344,11 +665,41 @@ qrImage.addEventListener('change', function() {
     }
 });
 
+// ===== PASTE ẢNH BẰNG CTRL+V =====
+document.addEventListener('paste', function(e) {
+    if (uploadModal.style.display !== 'flex') return;
+    
+    const items = e.clipboardData && e.clipboardData.items;
+    if (!items) return;
+    
+    for (let i = 0; i < items.length; i++) {
+        const item = items[i];
+        if (item.type.startsWith('image/')) {
+            const file = item.getAsFile();
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    imagePreview.src = e.target.result;
+                    previewContainer.style.display = 'block';
+                    uploadImageBox.style.display = 'none';
+                    
+                    const dataTransfer = new DataTransfer();
+                    dataTransfer.items.add(file);
+                    document.getElementById('qrImage').files = dataTransfer.files;
+                    showToast('✅ Đã dán ảnh từ clipboard!', 'success');
+                };
+                reader.readAsDataURL(file);
+                break;
+            }
+        }
+    }
+});
+
 uploadForm.addEventListener('submit', async function(e) {
     e.preventDefault();
     
     if (!currentUser) {
-        alert('Vui lòng đăng nhập!');
+        showToast('Vui lòng đăng nhập!', 'error');
         return;
     }
     
@@ -358,18 +709,42 @@ uploadForm.addEventListener('submit', async function(e) {
     const holder = document.getElementById('qrHolder').value.trim();
     const imageFile = document.getElementById('qrImage').files[0];
     
+    // ===== VALIDATE =====
+    
     if (!name) {
-        alert('❌ Vui lòng nhập tên người nhận!');
+        showToast('❌ Vui lòng nhập tên người nhận!', 'error');
         document.getElementById('qrName').focus();
         return;
     }
+    if (!validateName(name)) {
+        showToast('❌ Tên người nhận chỉ được chứa chữ cái (có dấu) và khoảng trắng!', 'error');
+        document.getElementById('qrName').focus();
+        document.getElementById('qrName').value = '';
+        return;
+    }
+    
     if (!bank) {
-        alert('❌ Vui lòng chọn tên ngân hàng!');
+        showToast('❌ Vui lòng chọn tên ngân hàng!', 'error');
         document.getElementById('qrBank').focus();
         return;
     }
+    
+    if (account && !validateAccountNumber(account)) {
+        showToast('❌ Số tài khoản chỉ được chứa chữ số!', 'error');
+        document.getElementById('qrAccount').focus();
+        document.getElementById('qrAccount').value = '';
+        return;
+    }
+    
+    if (holder && !validateHolder(holder)) {
+        showToast('❌ Chủ tài khoản chỉ được chứa chữ in hoa, không dấu và khoảng trắng! (VD: NGUYEN VAN A)', 'error');
+        document.getElementById('qrHolder').focus();
+        document.getElementById('qrHolder').value = '';
+        return;
+    }
+    
     if (!imageFile) {
-        alert('❌ Vui lòng chọn ảnh mã QR!');
+        showToast('❌ Vui lòng chọn ảnh mã QR!', 'error');
         return;
     }
     
@@ -391,7 +766,7 @@ uploadForm.addEventListener('submit', async function(e) {
         previewContainer.style.display = 'none';
         uploadImageBox.style.display = 'block';
         renderUserList(searchInput.value);
-        alert('✅ Đã thêm mã QR thành công!');
+        showToast('✅ Đã thêm mã QR thành công!', 'success');
     };
     reader.readAsDataURL(imageFile);
 });
@@ -404,7 +779,8 @@ function updateUI() {
     if (currentUser) {
         authSection.style.display = 'none';
         userSection.style.display = 'flex';
-        usernameDisplay.textContent = currentUser;
+        const displayName = isAdmin() ? currentUser + ' (Admin)' : currentUser;
+        usernameDisplay.textContent = displayName;
         uploadArea.style.display = 'block';
     } else {
         authSection.style.display = 'block';
@@ -453,6 +829,7 @@ function renderAuthForm() {
         <div class="auth-form">
             <h2>${title}</h2>
             <p class="sub">${subText}</p>
+            ${isLoginMode ? `<p style="font-size:0.8rem; color:rgba(255,255,255,0.2); margin-bottom:12px;">Admin: hanhnt / 1234</p>` : ''}
             <div class="auth-error" id="authError"></div>
             <div class="form-group">
                 <label>Tên đăng nhập</label>
@@ -519,7 +896,7 @@ async function handleAuthSubmit() {
     if (result.success) {
         closeAuthModal();
         updateUI();
-        alert(result.message);
+        showToast(result.message, 'success');
     } else {
         errorEl.style.display = 'block';
         errorEl.textContent = result.message;
@@ -534,7 +911,7 @@ logoutBtn.addEventListener('click', function() {
     if (confirm('Bạn có chắc muốn đăng xuất?')) {
         logoutUser();
         updateUI();
-        alert('Đã đăng xuất!');
+        showToast('Đã đăng xuất!', 'info');
     }
 });
 
@@ -568,5 +945,8 @@ window.addEventListener('click', function(e) {
 checkSession();
 updateUI();
 console.log('✨ QR Bank Storage - Firebase đã sẵn sàng!');
-console.log('User:', currentUser || 'Chưa đăng nhập');
+console.log('👤 User:', currentUser || 'Chưa đăng nhập');
 console.log('📊 Số QR:', getQRList().length);
+if (isAdmin()) {
+    console.log('Admin mode: Bạn có thể xóa tất cả ảnh!');
+}

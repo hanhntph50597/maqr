@@ -6,11 +6,11 @@
     <title>QR chuyển khoản</title>
     <link rel="stylesheet" href="style.css" />
     <!-- ===== FIREBASE SDK ===== -->
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 
-<!-- ===== FIREBASE CONFIG ===== -->
-<script src="firebase-config.js"></script>
+    <!-- ===== FIREBASE CONFIG ===== -->
+    <script src="firebase-config.js"></script>
 </head>
 <body>
 
@@ -24,7 +24,7 @@
                 </div>
                 <div class="header-actions">
                     <div id="authSection">
-                        <button class="btn-manage" id="manageBtn">Quản lý</button>
+                        <button class="btn-manage" id="manageBtn">Đăng nhập</button>
                     </div>
                     <div id="userSection" style="display:none;">
                         <span class="user-name" id="usernameDisplay"></span>
@@ -73,10 +73,14 @@
             <span class="modal-close" id="uploadModalClose">&times;</span>
             <h2 class="modal-title">📝 Thêm mã QR mới</h2>
             <form id="uploadForm">
+                <!-- ===== TÊN NGƯỜI NHẬN ===== -->
                 <div class="form-group">
                     <label>Tên người nhận <span class="required">*</span></label>
                     <input type="text" id="qrName" placeholder="Tên người nhận" required />
+                    <div class="field-error" id="qrNameError">⚠️ Vui lòng nhập tên người nhận!</div>
                 </div>
+
+                <!-- ===== TÊN NGÂN HÀNG ===== -->
                 <div class="form-group">
                     <label>Tên ngân hàng <span class="required">*</span></label>
                     <div class="select-wrapper">
@@ -94,15 +98,24 @@
                             <option value="Sacombank">Sacombank</option>
                         </select>
                     </div>
+                    <div class="field-error" id="qrBankError">⚠️ Vui lòng chọn tên ngân hàng!</div>
                 </div>
+
+                <!-- ===== SỐ TÀI KHOẢN ===== -->
                 <div class="form-group">
                     <label>Số tài khoản <span class="optional">(không bắt buộc)</span></label>
                     <input type="text" id="qrAccount" placeholder="Số tài khoản" />
+                    <div class="field-error" id="qrAccountError"></div>
                 </div>
+
+                <!-- ===== CHỦ TÀI KHOẢN ===== -->
                 <div class="form-group">
                     <label>Chủ tài khoản <span class="optional">(không bắt buộc)</span></label>
                     <input type="text" id="qrHolder" placeholder="Tên chủ tài khoản" />
+                    <div class="field-error" id="qrHolderError"></div>
                 </div>
+
+                <!-- ===== ẢNH MÃ QR ===== -->
                 <div class="form-group">
                     <label>Ảnh mã QR <span class="required">*</span></label>
                     <div class="upload-image-box" id="uploadImageBox">
@@ -113,11 +126,11 @@
                         <img id="imagePreview" src="" alt="Preview" />
                     </div>
                 </div>
-                <button type="submit" class="btn-submit">💾 Lưu mã QR</button>
+
+                <button type="submit" class="btn-submit">Lưu mã QR</button>
             </form>
         </div>
     </div>
-
 
     <!-- ===== MODAL AUTH ===== -->
     <div class="modal" id="authModal">

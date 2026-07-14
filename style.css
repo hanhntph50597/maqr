@@ -1020,4 +1020,48 @@ header {
         align-items: flex-start;
         gap: 2px;
     }
+    
+}
+/* ===== FIELD ERROR ===== */
+.field-error {
+    color: #ef4444;
+    font-size: 0.75rem;
+    margin-top: 4px;
+    min-height: 18px;
+    display: none;
+    font-weight: 500;
+}
+
+.field-error.show {
+    display: block;
+}
+
+.upload-modal .form-group input.error,
+.upload-modal .form-group select.error {
+    border-color: #ef4444 !important;
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1) !important;
+}
+
+.upload-modal .form-group input.success,
+.upload-modal .form-group select.success {
+    border-color: rgba(16, 185, 129, 0.4) !important;
+}
+
+.upload-modal .form-group input:focus.error {
+    border-color: #ef4444 !important;
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15) !important;
+}
+
+.upload-modal .form-group input:focus.success {
+    border-color: rgba(16, 185, 129, 0.5) !important;
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1) !important;
+}
+
+.upload-modal .form-group select.error {
+    border-color: #ef4444 !important;
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1) !important;
+}
+
+.upload-modal .form-group select.success {
+    border-color: rgba(16, 185, 129, 0.4) !important;
 }
