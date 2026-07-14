@@ -1065,3 +1065,71 @@ header {
 .upload-modal .form-group select.success {
     border-color: rgba(16, 185, 129, 0.4) !important;
 }
+/* ===== UPLOAD IMAGE BOX - TỐI ƯU CHO MOBILE ===== */
+.upload-image-box {
+    position: relative;
+    background: rgba(255, 255, 255, 0.03);
+    border: 2px dashed rgba(255, 255, 255, 0.1);
+    border-radius: 14px;
+    padding: 30px 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: rgba(255, 255, 255, 0.3);
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.upload-image-box:active {
+    transform: scale(0.97);
+    border-color: rgba(167, 139, 250, 0.3);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.upload-image-box:hover {
+    border-color: rgba(167, 139, 250, 0.3);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.upload-image-box input[type="file"] {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+    z-index: 2;
+    touch-action: manipulation;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 600px) {
+    .upload-image-box {
+        padding: 40px 16px;
+        min-height: 120px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .upload-image-box span {
+        font-size: 0.95rem;
+        pointer-events: none;
+    }
+    
+    .upload-image-box input[type="file"] {
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 3;
+        cursor: pointer;
+        touch-action: manipulation;
+    }
+}

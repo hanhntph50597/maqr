@@ -118,14 +118,14 @@
                 <!-- ===== ẢNH MÃ QR ===== -->
                 <div class="form-group">
                     <label>Ảnh mã QR <span class="required">*</span></label>
-                    <div class="upload-image-box" id="uploadImageBox">
-                        <span>📤 Nhấn để chọn ảnh</span>
-                        <input type="file" id="qrImage" accept="image/*" required />
-                    </div>
-                    <div class="preview-container" id="previewContainer" style="display:none;">
-                        <img id="imagePreview" src="" alt="Preview" />
-                    </div>
-                </div>
+                <div class="upload-image-box" id="uploadImageBox">
+                <span>📤 Nhấn để chọn ảnh</span>
+              <input type="file" id="qrImage" accept="image/*" capture="environment" />
+             </div>
+    <div class="preview-container" id="previewContainer" style="display:none;">
+        <img id="imagePreview" src="" alt="Preview" />
+    </div>
+</div>
 
                 <button type="submit" class="btn-submit">Lưu mã QR</button>
             </form>

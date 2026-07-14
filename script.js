@@ -161,6 +161,76 @@ function validateHolder(holder) {
 }
 
 // ==========================================
+// ===== VALIDATE ẢNH MÃ QR =====
+// ==========================================
+
+function validateQRImage(file) {
+    return new Promise((resolve) => {
+        // 1. Kiểm tra định dạng file
+        const validTypes = ['image/png', 'image/jpeg', 'image/webp', 'image/gif'];
+        if (!validTypes.includes(file.type)) {
+            resolve({ 
+                valid: false, 
+                message: 'Chỉ chấp nhận ảnh PNG, JPG, WEBP, GIF!' 
+            });
+            return;
+        }
+        
+        // 2. Kiểm tra kích thước (tối đa 5MB)
+        if (file.size > 5 * 1024 * 1024) {
+            resolve({ 
+                valid: false, 
+                message: 'Ảnh quá lớn (tối đa 5MB)!' 
+            });
+            return;
+        }
+        
+        // 3. Kiểm tra kích thước ảnh
+        const img = new Image();
+        img.onload = function() {
+            const ratio = this.width / this.height;
+            const isSquare = ratio >= 0.7 && ratio <= 1.3;
+            
+            if (this.width < 100 || this.height < 100) {
+                resolve({ 
+                    valid: false, 
+                    message: 'Ảnh quá nhỏ (tối thiểu 100x100 pixel)!' 
+                });
+                return;
+            }
+            
+            if (this.width > 5000 || this.height > 5000) {
+                resolve({ 
+                    valid: false, 
+                    message: 'Ảnh quá lớn (tối đa 5000x5000 pixel)!' 
+                });
+                return;
+            }
+            
+            // Kiểm tra tỷ lệ khung hình (QR code thường là hình vuông)
+            if (!isSquare) {
+                console.warn('Ảnh không có tỷ lệ vuông, có thể không phải mã QR');
+            }
+            
+            resolve({ 
+                valid: true, 
+                message: 'Ảnh hợp lệ',
+                isSquare: isSquare,
+                width: this.width,
+                height: this.height
+            });
+        };
+        img.onerror = function() {
+            resolve({ 
+                valid: false, 
+                message: 'Ảnh không hợp lệ hoặc bị hỏng!' 
+            });
+        };
+        img.src = URL.createObjectURL(file);
+    });
+}
+
+// ==========================================
 // ===== TOAST NOTIFICATION =====
 // ==========================================
 
@@ -515,7 +585,7 @@ function closeDetail() {
 
 function copyText(text) {
     navigator.clipboard.writeText(text).then(() => {
-        showToast(' Đã sao chép: ' + text, 'success');
+        showToast('Đã sao chép: ' + text, 'success');
     }).catch(() => {
         const textarea = document.createElement('textarea');
         textarea.value = text;
@@ -523,7 +593,7 @@ function copyText(text) {
         textarea.select();
         document.execCommand('copy');
         document.body.removeChild(textarea);
-        showToast(' Đã sao chép: ' + text, 'success');
+        showToast('Đã sao chép: ' + text, 'success');
     });
 }
 
@@ -532,7 +602,7 @@ async function deleteQR(id) {
     await deleteQRCode(id);
     closeDetail();
     renderUserList(searchInput.value);
-    showToast(' Đã xóa mã QR thành công!', 'success');
+    showToast('Đã xóa mã QR thành công!', 'success');
 }
 
 // ==========================================
@@ -601,7 +671,7 @@ if (transferForm) {
         e.preventDefault();
         
         if (!currentTransferQR) {
-            showToast(' Lỗi: Không tìm thấy thông tin chuyển khoản!', 'error');
+            showToast('❌ Lỗi: Không tìm thấy thông tin chuyển khoản!', 'error');
             return;
         }
         
@@ -611,7 +681,7 @@ if (transferForm) {
         const content = transferContent ? transferContent.value.trim() || 'Chuyển khoản' : 'Chuyển khoản';
         
         if (!amount || parseInt(amount) < 1000) {
-            showToast(' Vui lòng nhập số tiền (tối thiểu 1,000 VNĐ)!', 'error');
+            showToast('❌ Vui lòng nhập số tiền (tối thiểu 1,000 VNĐ)!', 'error');
             if (transferAmount) transferAmount.focus();
             return;
         }
@@ -619,14 +689,14 @@ if (transferForm) {
         const amountNum = parseInt(amount);
         const formattedAmount = amountNum.toLocaleString('vi-VN') + ' VNĐ';
         
-        if (!confirm(` Xác nhận chuyển khoản:\n\nNgười nhận: ${currentTransferQR.name}\nNgân hàng: ${currentTransferQR.bank}\nSố tài khoản: ${currentTransferQR.accountNumber}\nSố tiền: ${formattedAmount}\nNội dung: ${content}\n\nBấm OK để tiếp tục.`)) {
+        if (!confirm(`✅ Xác nhận chuyển khoản:\n\nNgười nhận: ${currentTransferQR.name}\nNgân hàng: ${currentTransferQR.bank}\nSố tài khoản: ${currentTransferQR.accountNumber}\nSố tiền: ${formattedAmount}\nNội dung: ${content}\n\nBấm OK để tiếp tục.`)) {
             return;
         }
         
         closeTransfer();
         closeDetail();
         
-        showToast(` Vui lòng mở ứng dụng ${currentTransferQR.bank} để chuyển khoản`, 'info');
+        showToast(`📱 Vui lòng mở ứng dụng ${currentTransferQR.bank} để chuyển khoản`, 'info');
     });
 }
 
@@ -649,11 +719,20 @@ uploadModalClose.addEventListener('click', function() {
     uploadImageBox.style.display = 'block';
 });
 
-uploadImageBox.addEventListener('click', function() {
+// ===== UPLOAD IMAGE - TỐI ƯU CHO MOBILE =====
+uploadImageBox.addEventListener('click', function(e) {
+    e.preventDefault();
+    e.stopPropagation();
     document.getElementById('qrImage').click();
 });
 
-qrImage.addEventListener('change', function() {
+// Ngăn chặn sự kiện click từ input file lan ra ngoài
+document.getElementById('qrImage').addEventListener('click', function(e) {
+    e.stopPropagation();
+});
+
+qrImage.addEventListener('change', function(e) {
+    e.stopPropagation();
     if (this.files && this.files[0]) {
         const reader = new FileReader();
         reader.onload = function(e) {
@@ -686,6 +765,7 @@ document.addEventListener('paste', function(e) {
                     const dataTransfer = new DataTransfer();
                     dataTransfer.items.add(file);
                     document.getElementById('qrImage').files = dataTransfer.files;
+                    showToast('Đã dán ảnh từ clipboard!', 'success');
                 };
                 reader.readAsDataURL(file);
                 break;
@@ -708,15 +788,14 @@ uploadForm.addEventListener('submit', async function(e) {
     const holder = document.getElementById('qrHolder').value.trim();
     const imageFile = document.getElementById('qrImage').files[0];
     
-    // ===== VALIDATE =====
-    
+    // ===== VALIDATE TEXT FIELDS =====
     if (!name) {
-        showToast(' Vui lòng nhập tên người nhận!', 'error');
+        showToast('❌ Vui lòng nhập tên người nhận!', 'error');
         document.getElementById('qrName').focus();
         return;
     }
     if (!validateName(name)) {
-        showToast('Tên người nhận chỉ được chứa chữ cái (có dấu) và khoảng trắng!', 'error');
+        showToast('❌ Tên người nhận chỉ được chứa chữ cái (có dấu) và khoảng trắng!', 'error');
         document.getElementById('qrName').focus();
         document.getElementById('qrName').value = '';
         return;
@@ -747,6 +826,23 @@ uploadForm.addEventListener('submit', async function(e) {
         return;
     }
     
+    // ===== VALIDATE ẢNH MÃ QR =====
+    showToast('⏳ Đang kiểm tra ảnh...', 'info');
+    
+    const result = await validateQRImage(imageFile);
+    if (!result.valid) {
+        showToast(result.message, 'error');
+        document.getElementById('qrImage').value = '';
+        previewContainer.style.display = 'none';
+        uploadImageBox.style.display = 'block';
+        return;
+    }
+    
+    // Kiểm tra thêm nếu ảnh không vuông
+    if (!result.isSquare) {
+        console.warn('Ảnh không có tỷ lệ vuông, có thể không phải mã QR');
+    }
+    
     const finalAccount = account || 'Chưa cập nhật';
     const finalHolder = holder || name.toUpperCase();
     
@@ -765,6 +861,7 @@ uploadForm.addEventListener('submit', async function(e) {
         previewContainer.style.display = 'none';
         uploadImageBox.style.display = 'block';
         renderUserList(searchInput.value);
+        showToast(' Đã thêm mã QR thành công!', 'success');
     };
     reader.readAsDataURL(imageFile);
 });
@@ -827,7 +924,7 @@ function renderAuthForm() {
         <div class="auth-form">
             <h2>${title}</h2>
             <p class="sub">${subText}</p>
-            ${isLoginMode ? `<p style="font-size:0.8rem; color:rgba(255,255,255,0.2); margin-bottom:12px;">Admin: hanhnt / 1234</p>` : ''}
+            ${isLoginMode ? `<p style="font-size:0.8rem; color:rgba(255,255,255,0.2); margin-bottom:12px;"></p>` : ''}
             <div class="auth-error" id="authError"></div>
             <div class="form-group">
                 <label>Tên đăng nhập</label>
