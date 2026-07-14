@@ -515,7 +515,7 @@ function closeDetail() {
 
 function copyText(text) {
     navigator.clipboard.writeText(text).then(() => {
-        showToast('✅ Đã sao chép: ' + text, 'success');
+        showToast(' Đã sao chép: ' + text, 'success');
     }).catch(() => {
         const textarea = document.createElement('textarea');
         textarea.value = text;
@@ -523,7 +523,7 @@ function copyText(text) {
         textarea.select();
         document.execCommand('copy');
         document.body.removeChild(textarea);
-        showToast('✅ Đã sao chép: ' + text, 'success');
+        showToast(' Đã sao chép: ' + text, 'success');
     });
 }
 
@@ -532,7 +532,7 @@ async function deleteQR(id) {
     await deleteQRCode(id);
     closeDetail();
     renderUserList(searchInput.value);
-    showToast('🗑️ Đã xóa mã QR thành công!', 'success');
+    showToast(' Đã xóa mã QR thành công!', 'success');
 }
 
 // ==========================================
@@ -601,7 +601,7 @@ if (transferForm) {
         e.preventDefault();
         
         if (!currentTransferQR) {
-            showToast('❌ Lỗi: Không tìm thấy thông tin chuyển khoản!', 'error');
+            showToast(' Lỗi: Không tìm thấy thông tin chuyển khoản!', 'error');
             return;
         }
         
@@ -611,7 +611,7 @@ if (transferForm) {
         const content = transferContent ? transferContent.value.trim() || 'Chuyển khoản' : 'Chuyển khoản';
         
         if (!amount || parseInt(amount) < 1000) {
-            showToast('❌ Vui lòng nhập số tiền (tối thiểu 1,000 VNĐ)!', 'error');
+            showToast(' Vui lòng nhập số tiền (tối thiểu 1,000 VNĐ)!', 'error');
             if (transferAmount) transferAmount.focus();
             return;
         }
@@ -619,14 +619,14 @@ if (transferForm) {
         const amountNum = parseInt(amount);
         const formattedAmount = amountNum.toLocaleString('vi-VN') + ' VNĐ';
         
-        if (!confirm(`✅ Xác nhận chuyển khoản:\n\nNgười nhận: ${currentTransferQR.name}\nNgân hàng: ${currentTransferQR.bank}\nSố tài khoản: ${currentTransferQR.accountNumber}\nSố tiền: ${formattedAmount}\nNội dung: ${content}\n\nBấm OK để tiếp tục.`)) {
+        if (!confirm(` Xác nhận chuyển khoản:\n\nNgười nhận: ${currentTransferQR.name}\nNgân hàng: ${currentTransferQR.bank}\nSố tài khoản: ${currentTransferQR.accountNumber}\nSố tiền: ${formattedAmount}\nNội dung: ${content}\n\nBấm OK để tiếp tục.`)) {
             return;
         }
         
         closeTransfer();
         closeDetail();
         
-        showToast(`📱 Vui lòng mở ứng dụng ${currentTransferQR.bank} để chuyển khoản`, 'info');
+        showToast(` Vui lòng mở ứng dụng ${currentTransferQR.bank} để chuyển khoản`, 'info');
     });
 }
 
@@ -686,7 +686,6 @@ document.addEventListener('paste', function(e) {
                     const dataTransfer = new DataTransfer();
                     dataTransfer.items.add(file);
                     document.getElementById('qrImage').files = dataTransfer.files;
-                    showToast('✅ Đã dán ảnh từ clipboard!', 'success');
                 };
                 reader.readAsDataURL(file);
                 break;
