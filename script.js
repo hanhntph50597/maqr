@@ -404,7 +404,7 @@ function updateUI() {
     if (currentUser) {
         authSection.style.display = 'none';
         userSection.style.display = 'flex';
-        usernameDisplay.textContent = '👤 ' + currentUser;
+        usernameDisplay.textContent = currentUser;
         uploadArea.style.display = 'block';
     } else {
         authSection.style.display = 'block';
@@ -568,5 +568,5 @@ window.addEventListener('click', function(e) {
 checkSession();
 updateUI();
 console.log('✨ QR Bank Storage - Firebase đã sẵn sàng!');
-console.log('👤 User:', currentUser || 'Chưa đăng nhập');
+console.log('User:', currentUser || 'Chưa đăng nhập');
 console.log('📊 Số QR:', getQRList().length);
