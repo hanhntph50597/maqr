@@ -618,17 +618,54 @@ function getInitials(name) {
 // ===== RENDER USER LIST =====
 // ==========================================
 
+// ==========================================
+// ===== RENDER USER LIST =====
+// ==========================================
+
 async function renderUserList(filter = '') {
     const qrs = await getQRList();
-    const filtered = qrs.filter(qr =>
+    const filtered = qrs.filter(qr => 
         qr.name.toLowerCase().includes(filter.toLowerCase())
     );
 
-    if (filtered.length === 0) {
+    // Nếu đã đăng nhập và có filter nhưng không tìm thấy
+    if (currentUser && filter.trim() !== '' && filtered.length === 0) {
         userList.innerHTML = '';
         emptyState.style.display = 'block';
+        emptyState.innerHTML = `
+            <span>🔍</span>
+            <p>Không tìm thấy mã QR nào cho "${filter}"</p>
+            <p style="font-size:0.8rem; color:rgba(255,255,255,0.2); margin-top:4px;">Vui lòng thử lại với từ khóa khác</p>
+        `;
         return;
     }
+
+    // Nếu chưa đăng nhập và chưa có dữ liệu
+    if (!currentUser && qrs.length === 0) {
+        userList.innerHTML = '';
+        emptyState.style.display = 'block';
+        emptyState.innerHTML = `
+            <span>📭</span>
+            <p>Chưa có mã QR nào. Hãy đăng nhập để thêm mới!</p>
+        `;
+        return;
+    }
+
+    // Nếu đã đăng nhập nhưng chưa có dữ liệu
+    if (currentUser && qrs.length === 0) {
+        userList.innerHTML = '';
+        emptyState.style.display = 'block';
+        emptyState.innerHTML = `
+            <span>📭</span>
+            <p>Chưa có mã QR nào. Hãy thêm mã QR mới!</p>
+            <button class="btn-upload-empty" onclick="document.getElementById('uploadBtn').click()" style="margin-top:12px; padding:8px 20px; background:linear-gradient(135deg,#7c3aed,#4f46e5); color:white; border:none; border-radius:40px; cursor:pointer; font-weight:600; font-size:0.85rem;">
+                ➕ Thêm mã QR
+            </button>
+        `;
+        return;
+    }
+
+    // Trường hợp có dữ liệu và hiển thị bình thường
     emptyState.style.display = 'none';
 
     let html = '';
@@ -652,7 +689,7 @@ async function renderUserList(filter = '') {
     userList.innerHTML = html;
 
     document.querySelectorAll('.user-item').forEach(item => {
-        item.addEventListener('click', function () {
+        item.addEventListener('click', function() {
             const id = this.dataset.id;
             getQRList().then(qrs => {
                 const qr = qrs.find(q => q.id === id);
@@ -747,18 +784,35 @@ async function deleteQR(id) {
 }
 
 // ==========================================
-// ===== TRANSFER =====
+// ===== TRANSFER (DONATE) - LUÔN HIỂN THỊ QR CỦA NGUYỄN TRỌNG HẠNH =====
 // ==========================================
 
 let currentTransferQR = null;
 
 async function openTransfer(id) {
+    // Lấy tất cả QR từ database
     const qrs = await getQRList();
-    const qr = qrs.find(q => q.id === id);
-    if (!qr) return;
+    
+    // Tìm QR của Nguyễn Trọng Hạnh
+    const defaultQR = qrs.find(q => q.name === 'Nguyễn Trọng Hạnh');
+    
+    // Nếu không tìm thấy Nguyễn Trọng Hạnh, lấy QR đầu tiên
+    const qr = defaultQR || qrs[0];
+    
+    if (!qr) {
+        showToast('Không tìm thấy mã QR!', 'error');
+        return;
+    }
 
     currentTransferQR = qr;
 
+    // Set ảnh QR
+    const transferQRImage = document.getElementById('transferQRImage');
+    if (transferQRImage) {
+        transferQRImage.src = qr.imageData;
+    }
+
+    // Set thông tin
     const transferInfo = document.getElementById('transferInfo');
     if (transferInfo) {
         transferInfo.innerHTML = `
@@ -772,19 +826,24 @@ async function openTransfer(id) {
             </div>
             <div class="info-row">
                 <span class="label">Số tài khoản</span>
-                <span class="value">${qr.accountNumber}</span>
+                <span class="value">
+                    ${qr.accountNumber}
+                    <button class="btn-copy-transfer" onclick="copyText('${qr.accountNumber}')"> Copy</button>
+                </span>
             </div>
             <div class="info-row">
                 <span class="label">Chủ tài khoản</span>
-                <span class="value">${qr.accountHolder}</span>
+                <span class="value">
+                    ${qr.accountHolder}
+                    <button class="btn-copy-transfer" onclick="copyText('${qr.accountHolder}')"> Copy</button>
+                </span>
+            </div>
+            <div class="info-row" style="border-bottom: none; padding-top:8px; margin-top:4px; border-top: 2px dashed #dbeafe;">
+                <span class="label" style="color:#ef4444; font-weight:600;"> Nội dung</span>
+                <span class="value" style="color:#ef4444; font-weight:700;">Donate</span>
             </div>
         `;
     }
-
-    const transferAmount = document.getElementById('transferAmount');
-    const transferContent = document.getElementById('transferContent');
-    if (transferAmount) transferAmount.value = '';
-    if (transferContent) transferContent.value = '';
 
     const transferModal = document.getElementById('transferModal');
     if (transferModal) transferModal.style.display = 'flex';
@@ -796,50 +855,43 @@ function closeTransfer() {
     currentTransferQR = null;
 }
 
+// Copy tất cả thông tin chuyển khoản
+function copyAllTransferInfo() {
+    if (!currentTransferQR) {
+        showToast('Không có thông tin chuyển khoản!', 'error');
+        return;
+    }
+
+    const transferText = 
+        `💝 DONATE\n\n` +
+        `🏦 Ngân hàng: ${currentTransferQR.bank}\n` +
+        `💳 Số tài khoản: ${currentTransferQR.accountNumber}\n` +
+        `👤 Chủ tài khoản: ${currentTransferQR.accountHolder}\n` +
+        `📝 Nội dung: Donate\n` +
+        `👤 Người nhận: ${currentTransferQR.name}`;
+
+    navigator.clipboard.writeText(transferText).then(() => {
+        showToast(' Đã sao chép tất cả thông tin!', 'success');
+    }).catch(() => {
+        // Fallback
+        const textarea = document.createElement('textarea');
+        textarea.value = transferText;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+        showToast(' Đã sao chép tất cả thông tin!', 'success');
+    });
+}
+
+// Event listeners cho transfer modal
 const transferModalClose = document.getElementById('transferModalClose');
-const transferCancel = document.getElementById('transferCancel');
 if (transferModalClose) transferModalClose.addEventListener('click', closeTransfer);
-if (transferCancel) transferCancel.addEventListener('click', closeTransfer);
 
 window.addEventListener('click', function (e) {
     const transferModal = document.getElementById('transferModal');
     if (e.target === transferModal) closeTransfer();
 });
-
-const transferForm = document.getElementById('transferForm');
-if (transferForm) {
-    transferForm.addEventListener('submit', function (e) {
-        e.preventDefault();
-
-        if (!currentTransferQR) {
-            showToast('Lỗi: Không tìm thấy thông tin chuyển khoản!', 'error');
-            return;
-        }
-
-        const transferAmount = document.getElementById('transferAmount');
-        const transferContent = document.getElementById('transferContent');
-        const amount = transferAmount ? transferAmount.value.trim() : '';
-        const content = transferContent ? transferContent.value.trim() || 'Chuyển khoản' : 'Chuyển khoản';
-
-        if (!amount || parseInt(amount) < 1000) {
-            showToast('Vui lòng nhập số tiền (tối thiểu 1,000 VNĐ)!', 'error');
-            if (transferAmount) transferAmount.focus();
-            return;
-        }
-
-        const amountNum = parseInt(amount);
-        const formattedAmount = amountNum.toLocaleString('vi-VN') + ' VNĐ';
-
-        if (!confirm(`Xác nhận chuyển khoản:\n\nNgười nhận: ${currentTransferQR.name}\nNgân hàng: ${currentTransferQR.bank}\nSố tài khoản: ${currentTransferQR.accountNumber}\nSố tiền: ${formattedAmount}\nNội dung: ${content}\n\nBấm OK để tiếp tục.`)) {
-            return;
-        }
-
-        closeTransfer();
-        closeDetail();
-
-        showToast(`Vui lòng mở ứng dụng ${currentTransferQR.bank} để chuyển khoản`, 'info');
-    });
-}
 
 // ==========================================
 // ===== UPLOAD QR =====
