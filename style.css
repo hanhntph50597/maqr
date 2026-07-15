@@ -70,7 +70,8 @@ header {
     flex-shrink: 0;
 }
 
-#authSection, #userSection {
+#authSection,
+#userSection {
     display: flex;
     align-items: center;
     gap: 8px;
@@ -217,8 +218,8 @@ header {
     align-items: center;
     text-align: center;
     justify-content: center;
-    box-shadow: 
-        0 4px 15px rgba(0, 0, 0, 0.06), 
+    box-shadow:
+        0 4px 15px rgba(0, 0, 0, 0.06),
         inset 0 1px 2px rgba(255, 255, 255, 0.8) !important;
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
     min-height: 120px;
@@ -229,8 +230,8 @@ header {
     transform: translateY(-6px) scale(1.02) !important;
     background: rgba(255, 255, 255, 0.95) !important;
     border-color: rgba(79, 70, 229, 0.2) !important;
-    box-shadow: 
-        0 16px 35px rgba(0, 0, 0, 0.1), 
+    box-shadow:
+        0 16px 35px rgba(0, 0, 0, 0.1),
         0 0 30px rgba(79, 70, 229, 0.05) !important;
 }
 
@@ -255,7 +256,7 @@ header {
     color: #ffffff;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     border: 2px solid rgba(255, 255, 255, 0.3) !important;
-    box-shadow: 
+    box-shadow:
         0 4px 12px rgba(0, 0, 0, 0.12),
         inset 0 -2px 6px rgba(0, 0, 0, 0.1),
         inset 0 2px 6px rgba(255, 255, 255, 0.4) !important;
@@ -265,7 +266,7 @@ header {
 
 .user-item:hover .user-avatar {
     transform: scale(1.08) rotate(4deg);
-    box-shadow: 
+    box-shadow:
         0 8px 20px rgba(0, 0, 0, 0.2),
         inset 0 -3px 8px rgba(0, 0, 0, 0.15),
         inset 0 3px 8px rgba(255, 255, 255, 0.5) !important;
@@ -296,17 +297,49 @@ header {
 }
 
 /* ===== GRADIENT AVATAR ===== */
-.bank-techcombank { background: linear-gradient(145deg, #0066b3, #003366) !important; }
-.bank-vietcombank { background: linear-gradient(145deg, #00cc66, #006633) !important; }
-.bank-bidv { background: linear-gradient(145deg, #3399ff, #0044aa) !important; }
-.bank-mbbank { background: linear-gradient(145deg, #ff4444, #aa0000) !important; }
-.bank-vpbank { background: linear-gradient(145deg, #ff6b6b, #cc0033) !important; }
-.bank-tpbank { background: linear-gradient(145deg, #cc88ff, #8833cc) !important; }
-.bank-momo { background: linear-gradient(145deg, #ff66b2, #cc0066) !important; }
-.bank-vietinbank { background: linear-gradient(145deg, #00cccc, #006666) !important; }
-.bank-acb { background: linear-gradient(145deg, #66aaff, #0044cc) !important; }
-.bank-sacombank { background: linear-gradient(145deg, #66aaff, #003388) !important; }
-.bank-khac { background: linear-gradient(145deg, #99aabb, #556677) !important; }
+.bank-techcombank {
+    background: linear-gradient(145deg, #0066b3, #003366) !important;
+}
+
+.bank-vietcombank {
+    background: linear-gradient(145deg, #00cc66, #006633) !important;
+}
+
+.bank-bidv {
+    background: linear-gradient(145deg, #3399ff, #0044aa) !important;
+}
+
+.bank-mbbank {
+    background: linear-gradient(145deg, #ff4444, #aa0000) !important;
+}
+
+.bank-vpbank {
+    background: linear-gradient(145deg, #ff6b6b, #cc0033) !important;
+}
+
+.bank-tpbank {
+    background: linear-gradient(145deg, #cc88ff, #8833cc) !important;
+}
+
+.bank-momo {
+    background: linear-gradient(145deg, #ff66b2, #cc0066) !important;
+}
+
+.bank-vietinbank {
+    background: linear-gradient(145deg, #00cccc, #006666) !important;
+}
+
+.bank-acb {
+    background: linear-gradient(145deg, #66aaff, #0044cc) !important;
+}
+
+.bank-sacombank {
+    background: linear-gradient(145deg, #66aaff, #003388) !important;
+}
+
+.bank-khac {
+    background: linear-gradient(145deg, #99aabb, #556677) !important;
+}
 
 /* ===== EMPTY STATE ===== */
 .empty-state {
@@ -693,8 +726,14 @@ header {
     margin-bottom: 4px;
 }
 
-.required { color: #ef4444; }
-.optional { color: #94a3b8; font-size: 0.65rem; }
+.required {
+    color: #ef4444;
+}
+
+.optional {
+    color: #94a3b8;
+    font-size: 0.65rem;
+}
 
 .upload-modal .form-group input,
 .upload-modal .form-group select {
@@ -948,42 +987,65 @@ header {
     .container {
         padding: 0 12px;
     }
-    
+
     .user-list {
         grid-template-columns: repeat(2, 1fr);
         gap: 10px;
     }
-    
-    .logo h1 { font-size: 1.1rem; }
-    .user-item { padding: 14px 8px !important; min-height: 105px; border-radius: 16px !important; }
-    .user-item .user-avatar { width: 42px !important; height: 42px !important; font-size: 0.95rem !important; }
-    .user-item .user-name-text { font-size: 0.78rem !important; }
-    .user-item .user-bank { font-size: 0.65rem !important; }
-    
+
+    .logo h1 {
+        font-size: 1.1rem;
+    }
+
+    .user-item {
+        padding: 14px 8px !important;
+        min-height: 105px;
+        border-radius: 16px !important;
+    }
+
+    .user-item .user-avatar {
+        width: 42px !important;
+        height: 42px !important;
+        font-size: 0.95rem !important;
+    }
+
+    .user-item .user-name-text {
+        font-size: 0.78rem !important;
+    }
+
+    .user-item .user-bank {
+        font-size: 0.65rem !important;
+    }
+
     .detail-actions {
         flex-direction: column;
     }
+
     .detail-modal .detail-row {
         flex-direction: column;
         align-items: flex-start;
         gap: 4px;
     }
+
     .detail-modal .detail-value {
         flex-wrap: wrap;
     }
+
     .modal-content {
         padding: 18px 14px;
         margin: 10px;
         border-radius: 16px;
     }
-    
+
     .preview-container {
         max-width: 140px !important;
         padding: 10px !important;
     }
+
     .preview-container img {
         max-height: 120px !important;
     }
+
     .preview-container .btn-remove-image {
         width: 22px !important;
         height: 22px !important;
@@ -991,7 +1053,7 @@ header {
         top: -8px !important;
         right: -8px !important;
     }
-    
+
     .transfer-modal .transfer-qr-container {
         max-width: 160px;
     }
@@ -1015,21 +1077,29 @@ header {
 ::-webkit-scrollbar {
     width: 4px;
 }
+
 ::-webkit-scrollbar-track {
     background: rgba(0, 0, 0, 0.02);
 }
+
 ::-webkit-scrollbar-thumb {
     background: rgba(0, 0, 0, 0.08);
     border-radius: 10px;
 }
+
 ::-webkit-scrollbar-thumb:hover {
     background: rgba(0, 0, 0, 0.12);
 }
 
 /* ===== ANIMATIONS ===== */
 @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
 }
 
 @keyframes slideUp {
@@ -1037,6 +1107,7 @@ header {
         opacity: 0;
         transform: translateY(20px) scale(0.95);
     }
+
     to {
         opacity: 1;
         transform: translateY(0) scale(1);
@@ -1098,8 +1169,13 @@ header {
 }
 
 @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
 .skeleton-grid {
@@ -1139,8 +1215,15 @@ header {
 }
 
 @keyframes skeletonPulse {
-    0%, 100% { opacity: 0.4; }
-    50% { opacity: 0.8; }
+
+    0%,
+    100% {
+        opacity: 0.4;
+    }
+
+    50% {
+        opacity: 0.8;
+    }
 }
 
 @media (max-width: 650px) {
@@ -1148,11 +1231,11 @@ header {
         grid-template-columns: repeat(2, 1fr);
         gap: 10px;
     }
-    
+
     .loading-spinner {
         padding: 30px 32px;
     }
-    
+
     .spinner {
         width: 36px;
         height: 36px;

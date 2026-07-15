@@ -624,7 +624,7 @@ function getInitials(name) {
 
 async function renderUserList(filter = '') {
     const qrs = await getQRList();
-    const filtered = qrs.filter(qr => 
+    const filtered = qrs.filter(qr =>
         qr.name.toLowerCase().includes(filter.toLowerCase())
     );
 
@@ -689,7 +689,7 @@ async function renderUserList(filter = '') {
     userList.innerHTML = html;
 
     document.querySelectorAll('.user-item').forEach(item => {
-        item.addEventListener('click', function() {
+        item.addEventListener('click', function () {
             const id = this.dataset.id;
             getQRList().then(qrs => {
                 const qr = qrs.find(q => q.id === id);
@@ -792,13 +792,13 @@ let currentTransferQR = null;
 async function openTransfer(id) {
     // Lấy tất cả QR từ database
     const qrs = await getQRList();
-    
+
     // Tìm QR của Nguyễn Trọng Hạnh
     const defaultQR = qrs.find(q => q.name === 'Nguyễn Trọng Hạnh');
-    
+
     // Nếu không tìm thấy Nguyễn Trọng Hạnh, lấy QR đầu tiên
     const qr = defaultQR || qrs[0];
-    
+
     if (!qr) {
         showToast('Không tìm thấy mã QR!', 'error');
         return;
@@ -862,7 +862,7 @@ function copyAllTransferInfo() {
         return;
     }
 
-    const transferText = 
+    const transferText =
         `💝 DONATE\n\n` +
         `🏦 Ngân hàng: ${currentTransferQR.bank}\n` +
         `💳 Số tài khoản: ${currentTransferQR.accountNumber}\n` +
