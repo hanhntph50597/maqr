@@ -83,7 +83,7 @@
                 <!-- ===== TÊN NGƯỜI NHẬN ===== -->
                 <div class="form-group">
                     <label>Tên người nhận <span class="required">*</span></label>
-                    <input type="text" id="qrName" placeholder="Tên người nhận" required />
+                    <input type="text" id="qrName" placeholder="Tên người nhận" />
                     <div class="field-error" id="qrNameError">⚠️ Vui lòng nhập tên người nhận!</div>
                 </div>
 
@@ -91,7 +91,7 @@
                 <div class="form-group">
                     <label>Tên ngân hàng <span class="required">*</span></label>
                     <div class="select-wrapper">
-                        <select id="qrBank" required>
+                        <select id="qrBank">
                             <option value="" disabled selected>Chọn ngân hàng...</option>
                             <option value="Techcombank">Techcombank</option>
                             <option value="Vietcombank">Vietcombank</option>
@@ -172,8 +172,9 @@
 
     <!-- ===== FILE INPUT HIDDEN ===== -->
     <input type="file" id="fileInput" accept="image/*" style="display:none;" />
-
+<script src="validate_qrName.js"></script>
     <script src="script.js"></script>
+    
 </body>
 
 </html>

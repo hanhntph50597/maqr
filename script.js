@@ -507,33 +507,12 @@ const qrHolderError = document.getElementById('qrHolderError');
 const qrBankError = document.getElementById('qrBankError');
 
 // ===== VALIDATE TÊN NGƯỜI NHẬN =====
-qrNameInput.addEventListener('input', function () {
-    const value = this.value.trim();
-
-    if (value && !validateName(value)) {
-        this.classList.remove('success');
-        this.classList.add('error');
-        qrNameError.textContent = 'Chỉ được chứa chữ cái (có dấu) và khoảng trắng!';
-        qrNameError.classList.add('show');
-    } else if (value && validateName(value)) {
-        this.classList.remove('error');
-        this.classList.add('success');
-        qrNameError.classList.remove('show');
-    } else {
-        this.classList.remove('error', 'success');
-        qrNameError.textContent = 'Vui lòng nhập tên người nhận!';
-        qrNameError.classList.add('show');
-    }
+qrNameInput.addEventListener('input', () => {
+    validateQrName(false);
 });
 
-qrNameInput.addEventListener('blur', function () {
-    const value = this.value.trim();
-    if (!value) {
-        this.classList.remove('success');
-        this.classList.add('error');
-        qrNameError.textContent = 'Vui lòng nhập tên người nhận!';
-        qrNameError.classList.add('show');
-    }
+qrNameInput.addEventListener('blur', () => {
+    validateQrName(true);
 });
 
 // ===== VALIDATE SỐ TÀI KHOẢN =====
@@ -1011,24 +990,22 @@ uploadForm.addEventListener('submit', async function (e) {
         return;
     }
 
-    const name = document.getElementById('qrName').value.trim();
+    // const name = document.getElementById('qrName').value.trim();
+    const name = qrNameInput.value.trim();
     const bank = document.getElementById('qrBank').value;
     const account = document.getElementById('qrAccount').value.trim();
     const holder = document.getElementById('qrHolder').value.trim();
     const imageFile = document.getElementById('qrImage').files[0];
 
-    if (!name) {
-        showToast('Vui lòng nhập tên người nhận!', 'error');
-        document.getElementById('qrName').focus();
-        return;
-    }
-    if (!validateName(name)) {
-        showToast('Tên người nhận chỉ được chứa chữ cái (có dấu) và khoảng trắng!', 'error');
-        document.getElementById('qrName').focus();
-        document.getElementById('qrName').value = '';
-        return;
-    }
-
+    // if (!name) {
+    //     showToast('Vui lòng nhập tên người nhận!', 'error');
+    //     document.getElementById('qrName').focus();
+    //     return;
+    // }
+    if (!validateQrName(true)) {
+    qrNameInput.focus();
+    return;
+}
     if (!bank) {
         showToast('Vui lòng chọn tên ngân hàng!', 'error');
         document.getElementById('qrBank').focus();
@@ -1090,6 +1067,10 @@ uploadForm.addEventListener('submit', async function (e) {
         showToast('Đã thêm mã QR thành công!');
     };
     reader.readAsDataURL(imageFile);
+    if (!validateQrName(true)) {
+    qrNameInput.focus();
+    return;
+}
 });
 
 // ==========================================
