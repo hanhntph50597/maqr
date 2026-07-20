@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>QR chuyển khoản</title>
+    <link rel="stylesheet" href="style.css" />
+    <!-- ===== FIREBASE SDK ===== -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
+    <!-- ===== FIREBASE CONFIG ===== -->
+    <script src="firebase-config.js"></script>
+</head>
+
+
+<script src="https://cdn.jsdelivr.net/npm/jsqr/dist/jsQR.js"></script> <!-- ===== thư viện jsQR để đọc QR từ hình ảnh ===== -->
+<body>
+
+    <!-- ===== HEADER ===== -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <h1>✨ QR chuyển khoản</h1>
+                </div>
+                <div class="header-actions">
+                    <div id="authSection">
+                        <button class="btn-manage" id="manageBtn">Đăng nhập</button>
+                    </div>
+                    <div id="userSection" style="display:none;">
+                        <span class="user-name" id="usernameDisplay"></span>
+                        <button class="btn-logout" id="logoutBtn">Đăng xuất</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- ===== MAIN ===== -->
+    <main class="container">
+        <!-- ===== LOADING ===== -->
+        <div class="loading-overlay" id="loadingOverlay">
+            <div class="loading-spinner">
+                <div class="spinner"></div>
+                <p>Đang tải dữ liệu...</p>
+            </div>
+        </div>
+        <!-- ===== SEARCH ===== -->
+        <div class="search-section">
+            <div class="search-box">
+                <span class="search-icon">🔍</span>
+                <input type="text" id="searchInput" placeholder="Tìm theo tên..." />
+            </div>
+        </div>
+
+        <!-- ===== UPLOAD BUTTON ===== -->
+        <div class="upload-area" id="uploadArea" style="display:none;">
+            <button class="btn-upload" id="uploadBtn">Thêm mã QR mới</button>
+        </div>
+
+        <!-- ===== DANH SÁCH NGƯỜI DÙNG ===== -->
+        <section class="user-list" id="userList"></section>
+
+        <!-- ===== EMPTY STATE ===== -->
+        <div class="empty-state" id="emptyState" style="display:none;">
+            <span>📭</span>
+            <p>Chưa có mã QR nào. Hãy đăng nhập để thêm mới!</p>
+        </div>
+
+    </main>
+
+    <!-- ===== MODAL CHI TIẾT ===== -->
+    <div class="modal" id="detailModal">
+        <div class="modal-content detail-modal" id="detailContent"></div>
+    </div>
+
+    <!-- ===== MODAL UPLOAD ===== -->
+    <div class="modal" id="uploadModal">
+        <div class="modal-content upload-modal">
+            <span class="modal-close" id="uploadModalClose">&times;</span>
+            <h2 class="modal-title">📝 Thêm mã QR mới</h2>
+            <form id="uploadForm">
+                <!-- ===== TÊN NGƯỜI NHẬN ===== -->
+                <div class="form-group">
+                    <label>Tên người nhận <span class="required">*</span></label>
+                    <input type="text" id="qrName" placeholder="Tên người nhận" />
+                    <div class="field-error" id="qrNameError">⚠️ Vui lòng nhập tên người nhận!</div>
+                </div>
+
+                <!-- ===== TÊN NGÂN HÀNG ===== -->
+                <div class="form-group">
+                    <label>Tên ngân hàng <span class="required">*</span></label>
+                    <div class="select-wrapper">
+                        <select id="qrBank">
+                            <option value="" disabled selected>Chọn ngân hàng...</option>
+                            <option value="Techcombank">Techcombank</option>
+                            <option value="Vietcombank">Vietcombank</option>
+                            <option value="BIDV">BIDV</option>
+                            <option value="MB Bank">MB Bank</option>
+                            <option value="VPBank">VPBank</option>
+                            <option value="TPBANK">TPBANK</option>
+                            <option value="MoMo">MoMo</option>
+                            <option value="VietinBank">VietinBank</option>
+                            <option value="ACB">ACB</option>
+                            <option value="Sacombank">Sacombank</option>
+                        </select>
+                    </div>
+                    <div class="field-error" id="qrBankError">⚠️ Vui lòng chọn tên ngân hàng!</div>
+                </div>
+
+                <!-- ===== SỐ TÀI KHOẢN ===== -->
+                <div class="form-group">
+                    <label>Số tài khoản <span class="optional">(không bắt buộc)</span></label>
+                    <input type="text" id="qrAccount" placeholder="Số tài khoản" />
+                    <div class="field-error" id="qrAccountError"></div>
+                </div>
+
+                <!-- ===== CHỦ TÀI KHOẢN ===== -->
+                <div class="form-group">
+                    <label>Chủ tài khoản <span class="optional">(không bắt buộc)</span></label>
+                    <input type="text" id="qrHolder" placeholder="Tên chủ tài khoản" />
+                    <div class="field-error" id="qrHolderError"></div>
+                </div>
+
+                <!-- ===== ẢNH MÃ QR ===== -->
+                <div class="form-group">
+    <label>Ảnh mã QR <span class="required">*</span></label>
+
+    <div class="upload-image-box" id="uploadImageBox">
+        <span>Nhấn để chọn ảnh</span>
+        <input type="file" id="qrImage" accept="image/*" />
+    </div>
+
+    <div class="preview-container" id="previewContainer" style="display:none;">
+        <img id="imagePreview" src="" alt="Preview" />
+        <button class="btn-remove-image" id="removeImageBtn" type="button">✕</button>
+    </div>
+
+    <!-- Thêm dòng này -->
+    <div class="field-error" id="qrImageError">
+        Vui lòng chọn ảnh mã QR!
+    </div>
+</div>
+
+                <button type="submit" class="btn-submit">Lưu mã QR</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ===== MODAL AUTH ===== -->
+    <div class="modal" id="authModal">
+        <div class="modal-content auth-modal" id="authFormContainer"></div>
+    </div>
+
+    <!-- ===== MODAL TRANSFER (DONATE) ===== -->
+    <div class="modal transfer-modal" id="transferModal">
+        <div class="modal-content">
+            <span class="modal-close" id="transferModalClose">&times;</span>
+            <h2 class="modal-title" style="text-align:center; font-size:1.5rem;">Donate thì làm</h2>
+            <p style="text-align:center; color:#64748b; margin-bottom:16px; font-size:0.9rem;">Quét mã QR hoặc chuyển
+                khoản theo thông tin bên dưới</p>
+
+            <!-- QR Code -->
+            <div class="transfer-qr-container">
+                <img id="transferQRImage" src="" alt="QR Code" />
+            </div>
+
+            <!-- Thông tin chuyển khoản -->
+            <div id="transferInfo">
+                <!-- Thông tin sẽ được JS điền -->
+            </div>
+
+            <div class="transfer-actions">
+                <button class="btn-copy-all" onclick="copyAllTransferInfo()"> Sao chép tất cả</button>
+                <button class="btn-close-detail" onclick="closeTransfer()">Đóng</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== FILE INPUT HIDDEN ===== -->
+    <input type="file" id="fileInput" accept="image/*" style="display:none;" />
+<script src="validate_qrName.js"></script>
+<script src="validate_BankName.js"></script>
+<script src="validate_QRImage_Required.js"></script>
+    <script src="script.js"></script>
+    
+</body>
+
+</html>
