@@ -11,10 +11,10 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 
     <!-- ===== FIREBASE CONFIG ===== -->
-    <script src="firebase-config.js"></script>
+    <script src="database/firebase-config.js"></script>
 </head>
 
-
+<script src="https://unpkg.com/@zxing/library@latest"></script> <!-- ===== thư viện zXing để đọc QR từ hình ảnh ===== -->
 <script src="https://cdn.jsdelivr.net/npm/jsqr/dist/jsQR.js"></script> <!-- ===== thư viện jsQR để đọc QR từ hình ảnh ===== -->
 <body>
 
@@ -181,9 +181,9 @@
 
     <!-- ===== FILE INPUT HIDDEN ===== -->
     <input type="file" id="fileInput" accept="image/*" style="display:none;" />
-<script src="validate_qrName.js"></script>
-<script src="validate_BankName.js"></script>
-<script src="validate_QRImage_Required.js"></script>
+<script src="validate/validate_qrName.js"></script>
+<script src="validate/validate_BankName.js"></script>
+<script src="validate/validate_QRImage_Required.js"></script>
     <script src="script.js"></script>
     
 </body>

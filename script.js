@@ -351,12 +351,29 @@ function validateQRImage(file) {
             }
 
             // Vẽ ảnh lên canvas để đọc QR
+const MAX_SIZE = 800;
+
+let width = this.width;
+let height = this.height;
+
+if (width > height) {
+    if (width > MAX_SIZE) {
+        height = Math.round(height * MAX_SIZE / width);
+        width = MAX_SIZE;
+    }
+} else {
+    if (height > MAX_SIZE) {
+        width = Math.round(width * MAX_SIZE / height);
+        height = MAX_SIZE;
+    }
+}
+
 const canvas = document.createElement('canvas');
-canvas.width = this.width;
-canvas.height = this.height;
+canvas.width = width;
+canvas.height = height;
 
 const ctx = canvas.getContext('2d');
-ctx.drawImage(this, 0, 0);
+ctx.drawImage(this, 0, 0, width, height);
 
 const imageData = ctx.getImageData(
     0,
@@ -371,6 +388,8 @@ const code = jsQR(
     imageData.width,
     imageData.height
 );
+console.log(canvas.width, canvas.height);
+console.log(code);
 
 // Không đọc được QR
 if (!code) {
@@ -1095,7 +1114,7 @@ qrImage.addEventListener('change', function () {
     }
 
     const finalAccount = account || 'Chưa cập nhật';
-    const finalHolder = holder || name.toUpperCase();
+    const finalHolder = holder || 'Chưa cập nhật';
 
     const reader = new FileReader();
     reader.onload = async function (e) {
