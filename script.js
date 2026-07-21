@@ -227,8 +227,8 @@ setTimeout(() => {
 
 console.log('QR Bank Storage - Firebase đã sẵn sàng!');
 console.log('User:', currentUser || 'Chưa đăng nhập');
-const qrs = await getQRList();
-console.log(qrs.length);
+// const qrs = await getQRList();
+// console.log(qrs.length);
 if (isAdmin()) {
     console.log('Admin mode: Bạn có thể xóa tất cả ảnh!');
 }
