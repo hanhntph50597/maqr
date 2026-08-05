@@ -418,7 +418,7 @@ document.addEventListener('click', function(e) {
         if (canvas) {
             const croppedDataUrl = canvas.toDataURL('image/png');
             document.getElementById('editImagePreview').src = croppedDataUrl;
-            document.getElementById('editPreviewLabel').textContent = '📷 Ảnh đã cắt';
+            document.getElementById('editPreviewLabel').textContent = 'Ảnh đã cắt';
             
             // Tạo file từ data URL để validate & submit
             const file = dataURLtoFile(croppedDataUrl, 'qr_edited.png');
@@ -534,7 +534,7 @@ async function saveEdit(data) {
         // Cập nhật vào Firebase
         await database.ref(`${DB_QRS}/${editingQRId}`).update(data);
         
-        showToast('✅ Đã cập nhật mã QR thành công!', 'success');
+        showToast('Đã cập nhật mã QR thành công!', 'success');
         closeEditModal();
         
         // Refresh danh sách
