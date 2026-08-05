@@ -91,7 +91,7 @@
                 <div class="form-group">
                     <label>Tên người nhận <span class="required">*</span></label>
                     <input type="text" id="qrName" placeholder="Tên người nhận" />
-                    <div class="field-error" id="qrNameError">⚠️ Vui lòng nhập tên người nhận!</div>
+                    <div class="field-error" id="qrNameError">Vui lòng nhập tên người nhận!</div>
                 </div>
 
                 <!-- ===== TÊN NGÂN HÀNG ===== -->
@@ -112,7 +112,7 @@
                             <option value="Sacombank">Sacombank</option>
                         </select>
                     </div>
-                    <div class="field-error" id="qrBankError">⚠️ Vui lòng chọn tên ngân hàng!</div>
+                    <div class="field-error" id="qrBankError">Vui lòng chọn tên ngân hàng!</div>
                 </div>
 
                 <!-- ===== SỐ TÀI KHOẢN ===== -->
@@ -141,9 +141,25 @@
     <div class="preview-container" id="previewContainer" style="display:none;">
         <img id="imagePreview" src="" alt="Preview" />
         <button class="btn-remove-image" id="removeImageBtn" type="button">✕</button>
+        <span class="preview-label" id="uploadPreviewLabel">📷 Ảnh đã chọn</span>
     </div>
 
-    <!-- Thêm dòng này -->
+    <div class="crop-wrapper" id="uploadCropContainer" style="display:none;">
+        <div class="crop-controls">
+            <div class="crop-toolbar">
+                <button type="button" class="btn-crop-rotate" id="uploadCropRotateLeft">↺ Xoay trái</button>
+                <button type="button" class="btn-crop-rotate" id="uploadCropRotateRight">↻ Xoay phải</button>
+                <button type="button" class="btn-crop-reset" id="uploadCropReset">⟲ Đặt lại</button>
+            </div>
+            <div class="crop-container-inner" id="uploadCropInner">
+                <img id="uploadCropImage" src="" alt="Crop" />
+            </div>
+            <div class="crop-actions">
+                <button type="button" class="btn-crop-apply" id="uploadCropApply">Áp dụng cắt</button>
+            </div>
+        </div>
+    </div>
+
     <div class="field-error" id="qrImageError">
         Vui lòng chọn ảnh mã QR!
     </div>

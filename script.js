@@ -935,7 +935,7 @@ function copyAllTransferInfo() {
 const transferModalClose = document.getElementById('transferModalClose');
 if (transferModalClose) transferModalClose.addEventListener('click', closeTransfer);
 
-// Chỉ đóng transfer modal bằng nút X
+// Chỉ đóng popup bằng nút X
 
 // ==========================================
 // ===== UPLOAD QR =====
@@ -956,7 +956,75 @@ uploadModalClose.addEventListener('click', function () {
     uploadImageBox.classList.remove('hidden');
     qrImage.value = '';
     imagePreview.src = '';
+    destroyUploadCropper();
 });
+
+let uploadCropper = null;
+
+function dataURLtoFile(dataurl, filename) {
+    const arr = dataurl.split(',');
+    const mime = arr[0].match(/:(.*?);/)[1];
+    const bstr = atob(arr[1]);
+    let n = bstr.length;
+    const u8arr = new Uint8Array(n);
+    while (n--) u8arr[n] = bstr.charCodeAt(n);
+    return new File([u8arr], filename, { type: mime });
+}
+
+function destroyUploadCropper() {
+    if (uploadCropper) {
+        uploadCropper.destroy();
+        uploadCropper = null;
+    }
+    const box = document.getElementById('uploadCropContainer');
+    if (box) box.style.display = 'none';
+}
+
+function initUploadCropper(imageSrc) {
+    const image = document.getElementById('uploadCropImage');
+    const container = document.getElementById('uploadCropContainer');
+    if (!image || !container) return;
+
+    destroyUploadCropper();
+    container.style.display = 'block';
+    if (previewContainer) previewContainer.classList.remove('show');
+
+    image.src = imageSrc;
+    image.onload = function () {
+        if (uploadCropper) {
+            uploadCropper.destroy();
+            uploadCropper = null;
+        }
+        container.style.display = 'block';
+        uploadCropper = new Cropper(image, {
+            aspectRatio: NaN,
+            viewMode: 1,
+            dragMode: 'move',
+            autoCropArea: 0.85,
+            restore: false,
+            guides: true,
+            center: true,
+            highlight: false,
+            cropBoxMovable: true,
+            cropBoxResizable: true,
+            toggleDragModeOnDblclick: false
+        });
+    };
+}
+
+function showUploadPreviewFromFile(file) {
+    const reader = new FileReader();
+    reader.onload = function (e) {
+        initUploadCropper(e.target.result);
+        uploadImageBox.classList.add('hidden');
+        showToast('Kéo khung để cắt ảnh, rồi bấm Áp dụng cắt', 'info');
+        if (typeof readQRAndFillForm === 'function') readQRAndFillForm(file);
+    };
+    reader.onerror = function () {
+        showToast('Lỗi đọc ảnh! Vui lòng thử lại.', 'error');
+    };
+    reader.readAsDataURL(file);
+}
 
 // ===== UPLOAD IMAGE - TỐI ƯU CHO MOBILE =====
 uploadImageBox.addEventListener('click', function (e) {
@@ -973,24 +1041,12 @@ qrImage.addEventListener('change', function (e) {
     e.stopPropagation();
     if (this.files && this.files[0]) {
         const file = this.files[0];
-
         if (file.size > 5 * 1024 * 1024) {
             showToast('Ảnh quá lớn! Tối đa 5MB.', 'error');
             this.value = '';
             return;
         }
-
-        const reader = new FileReader();
-        reader.onload = function (e) {
-            imagePreview.src = e.target.result;
-            previewContainer.classList.add('show');
-            uploadImageBox.classList.add('hidden');
-            showToast('Đã chọn ảnh thành công!', 'success');
-        };
-        reader.onerror = function () {
-            showToast('Lỗi đọc ảnh! Vui lòng thử lại.', 'error');
-        };
-        reader.readAsDataURL(file);
+        showUploadPreviewFromFile(file);
     }
 });
 
@@ -1002,6 +1058,7 @@ if (removeImageBtn) {
         uploadImageBox.classList.remove('hidden');
         qrImage.value = '';
         imagePreview.src = '';
+        destroyUploadCropper();
         showToast('Đã xóa ảnh!', 'info');
     });
 }
@@ -1018,18 +1075,10 @@ document.addEventListener('paste', function (e) {
         if (item.type.startsWith('image/')) {
             const file = item.getAsFile();
             if (file) {
-                const reader = new FileReader();
-                reader.onload = function (e) {
-                    imagePreview.src = e.target.result;
-                    previewContainer.classList.add('show');
-                    uploadImageBox.classList.add('hidden');
-
-                    const dataTransfer = new DataTransfer();
-                    dataTransfer.items.add(file);
-                    qrImage.files = dataTransfer.files;
-                    showToast('Đã dán ảnh từ clipboard!', 'success');
-                };
-                reader.readAsDataURL(file);
+                const dataTransfer = new DataTransfer();
+                dataTransfer.items.add(file);
+                qrImage.files = dataTransfer.files;
+                showUploadPreviewFromFile(file);
                 break;
             }
         }
@@ -1136,6 +1185,7 @@ qrImage.addEventListener('change', function () {
         uploadForm.reset();
         previewContainer.classList.remove('show');
         uploadImageBox.classList.remove('hidden');
+        destroyUploadCropper();
         renderUserList(searchInput.value);
         showToast('Đã thêm mã QR thành công!');
     };
@@ -1144,6 +1194,44 @@ qrImage.addEventListener('change', function () {
 //     qrNameInput.focus();
 //     return;
 // }
+});
+
+
+// ===== CROP CONTROLS (THÊM MỚI QR) =====
+document.addEventListener('click', function (e) {
+    if (e.target.id === 'uploadCropRotateLeft' && uploadCropper) {
+        uploadCropper.rotate(-90);
+    }
+    if (e.target.id === 'uploadCropRotateRight' && uploadCropper) {
+        uploadCropper.rotate(90);
+    }
+    if (e.target.id === 'uploadCropReset' && uploadCropper) {
+        uploadCropper.reset();
+    }
+    if (e.target.id === 'uploadCropApply' && uploadCropper) {
+        const canvas = uploadCropper.getCroppedCanvas({
+            maxWidth: 1200,
+            maxHeight: 1200,
+            imageSmoothingEnabled: true,
+            imageSmoothingQuality: 'high'
+        });
+        if (!canvas) return;
+        const croppedDataUrl = canvas.toDataURL('image/png');
+        imagePreview.src = croppedDataUrl;
+        previewContainer.classList.add('show');
+        uploadImageBox.classList.add('hidden');
+        const label = document.getElementById('uploadPreviewLabel');
+        if (label) label.textContent = '📷 Ảnh đã cắt';
+
+        const file = dataURLtoFile(croppedDataUrl, 'qr_cropped.png');
+        const dt = new DataTransfer();
+        dt.items.add(file);
+        qrImage.files = dt.files;
+
+        destroyUploadCropper();
+        showToast('Đã cắt ảnh thành công!', 'success');
+        if (typeof readQRAndFillForm === 'function') readQRAndFillForm(file);
+    }
 });
 
 // ==========================================
