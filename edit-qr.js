@@ -534,7 +534,7 @@ async function saveEdit(data) {
         // Cập nhật vào Firebase
         await database.ref(`${DB_QRS}/${editingQRId}`).update(data);
         
-        showToast('✅ Đã cập nhật mã QR thành công!', 'success');
+        showToast('Đã cập nhật mã QR thành công!', 'success');
         closeEditModal();
         
         // Refresh danh sách
@@ -548,6 +548,6 @@ async function saveEdit(data) {
         }
     } catch (error) {
         console.error('Lỗi cập nhật:', error);
-        showToast('❌ Lỗi cập nhật: ' + error.message, 'error');
+        showToast('Lỗi cập nhật: ' + error.message, 'error');
     }
 }
