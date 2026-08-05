@@ -131,41 +131,23 @@
 
                 <!-- ===== ẢNH MÃ QR ===== -->
                 <div class="form-group">
-                    <label>Ảnh mã QR <span class="required">*</span></label>
+    <label>Ảnh mã QR <span class="required">*</span></label>
 
-                    <label class="upload-image-box" id="uploadImageBox" for="qrImage">
-                        <span class="upload-text">Nhấn để chọn ảnh</span>
-                        <span class="upload-hint">PNG, JPG, WEBP (tối đa 5MB)</span>
-                        <input type="file" id="qrImage" accept="image/*" />
-                    </label>
+    <div class="upload-image-box" id="uploadImageBox">
+        <span>Nhấn để chọn ảnh</span>
+        <input type="file" id="qrImage" accept="image/*" />
+    </div>
 
-                    <div class="preview-container" id="previewContainer" style="display:none;">
-                        <img id="imagePreview" src="" alt="Preview" />
-                        <button class="btn-remove-image" id="removeImageBtn" type="button">✕</button>
-                        <span class="preview-label" id="uploadPreviewLabel"> Ảnh đã chọn</span>
-                    </div>
+    <div class="preview-container" id="previewContainer" style="display:none;">
+        <img id="imagePreview" src="" alt="Preview" />
+        <button class="btn-remove-image" id="removeImageBtn" type="button">✕</button>
+    </div>
 
-                    <!-- Crop container -->
-                    <div class="crop-wrapper" id="uploadCropContainer" style="display:none;">
-                        <div class="crop-controls">
-                            <div class="crop-toolbar">
-                                <button type="button" class="btn-crop-rotate" id="uploadCropRotateLeft">↺ Xoay trái</button>
-                                <button type="button" class="btn-crop-rotate" id="uploadCropRotateRight">↻ Xoay phải</button>
-                                <button type="button" class="btn-crop-reset" id="uploadCropReset">⟲ Đặt lại</button>
-                            </div>
-                            <div class="crop-container-inner" id="uploadCropContainerInner">
-                                <img id="uploadCropImage" src="" alt="Crop" />
-                            </div>
-                            <div class="crop-actions">
-                                <button type="button" class="btn-crop-apply" id="uploadCropApply">Áp dụng cắt</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="field-error" id="qrImageError">
-                        Vui lòng chọn ảnh mã QR!
-                    </div>
-                </div>
+    <!-- Thêm dòng này -->
+    <div class="field-error" id="qrImageError">
+        Vui lòng chọn ảnh mã QR!
+    </div>
+</div>
 
                 <button type="submit" class="btn-submit">Lưu mã QR</button>
             </form>

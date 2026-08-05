@@ -50,7 +50,7 @@ async function openEditModal(qrId) {
                         ${getBankOptions(qr.bank)}
                     </select>
                 </div>
-                <div class="field-error" id="editBankError">Vui lòng chọn tên ngân hàng!</div>
+                <div class="field-error" id="editBankError">⚠️ Vui lòng chọn tên ngân hàng!</div>
             </div>
 
             <!-- ===== SỐ TÀI KHOẢN ===== -->
@@ -73,6 +73,7 @@ async function openEditModal(qrId) {
 
                 <!-- Upload box (ẩn ban đầu vì đã có ảnh hiện tại) -->
                 <label class="upload-image-box" id="editUploadImageBox" style="display:none;" for="editImage">
+                    <span class="upload-icon">📤</span>
                     <span class="upload-text">Nhấn để chọn ảnh</span>
                     <span class="upload-hint">PNG, JPG, WEBP (tối đa 5MB)</span>
                     <input type="file" id="editImage" accept="image/*" />
@@ -136,11 +137,13 @@ function escapeHtml(text) {
 
 // ===== SETUP EDIT EVENTS =====
 function setupEditEvents() {
-    // Close modal (chỉ đóng bằng nút X)
+    // Close modal
     const closeBtn = document.getElementById('editModalClose');
     if (closeBtn) {
         closeBtn.addEventListener('click', closeEditModal);
     }
+    
+    // Chỉ đóng edit modal bằng nút X
     
     // Validate tên
     const editName = document.getElementById('editName');
@@ -264,7 +267,7 @@ function handleNewEditImage(file) {
         editPreviewContainer.classList.add('show');
         editPreviewContainer.style.display = 'flex';
         editUploadBox.style.display = 'none';
-        editPreviewLabel.textContent = 'Ảnh mới';
+        editPreviewLabel.textContent = '📷 Ảnh mới';
         cropContainer.style.display = 'block';
         
         editCurrentImageData = dataUrl;
@@ -415,7 +418,7 @@ document.addEventListener('click', function(e) {
         if (canvas) {
             const croppedDataUrl = canvas.toDataURL('image/png');
             document.getElementById('editImagePreview').src = croppedDataUrl;
-            document.getElementById('editPreviewLabel').textContent = 'Ảnh đã cắt';
+            document.getElementById('editPreviewLabel').textContent = '📷 Ảnh đã cắt';
             
             // Tạo file từ data URL để validate & submit
             const file = dataURLtoFile(croppedDataUrl, 'qr_edited.png');

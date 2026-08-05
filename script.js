@@ -935,7 +935,7 @@ function copyAllTransferInfo() {
 const transferModalClose = document.getElementById('transferModalClose');
 if (transferModalClose) transferModalClose.addEventListener('click', closeTransfer);
 
-// Đã tắt click ra ngoài để đóng transfer modal - chỉ đóng bằng nút X
+// Chỉ đóng transfer modal bằng nút X
 
 // ==========================================
 // ===== UPLOAD QR =====
@@ -1036,7 +1036,7 @@ document.addEventListener('paste', function (e) {
     }
 });
 
-// Đã tắt click ra ngoài để đóng upload modal - chỉ đóng bằng nút X
+// Chỉ đóng upload modal bằng nút X
 
 uploadForm.addEventListener('submit', async function (e) {
     e.preventDefault();
@@ -1302,7 +1302,7 @@ searchInput.addEventListener('input', function () {
 // ===== CLICK OUTSIDE MODAL =====
 // ==========================================
 
-// Đã tắt click ra ngoài để đóng detail/auth modal - chỉ đóng bằng nút X
+// Chỉ đóng detail/auth modal bằng nút X
 
 // ==========================================
 // ===== KHỞI CHẠY =====
