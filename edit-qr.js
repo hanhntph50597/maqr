@@ -32,13 +32,13 @@ async function openEditModal(qrId) {
     
     editContent.innerHTML = `
         <span class="modal-close" id="editModalClose">&times;</span>
-        <h2 class="modal-title">✏️ Chỉnh sửa mã QR</h2>
+        <h2 class="modal-title">Chỉnh sửa mã QR</h2>
         <form id="editForm">
             <!-- ===== TÊN NGƯỜI NHẬN ===== -->
             <div class="form-group">
                 <label>Tên người nhận <span class="required">*</span></label>
                 <input type="text" id="editName" placeholder="Tên người nhận" value="${escapeHtml(qr.name)}" />
-                <div class="field-error" id="editNameError">⚠️ Vui lòng nhập tên người nhận!</div>
+                <div class="field-error" id="editNameError">Vui lòng nhập tên người nhận!</div>
             </div>
 
             <!-- ===== TÊN NGÂN HÀNG ===== -->
@@ -83,7 +83,7 @@ async function openEditModal(qrId) {
                 <div class="preview-container show" id="editPreviewContainer">
                     <img id="editImagePreview" src="${qr.imageData}" alt="Ảnh mã QR" />
                     <button class="btn-remove-image" id="editRemoveImageBtn" type="button">✕</button>
-                    <span class="preview-label" id="editPreviewLabel">📷 Ảnh hiện tại</span>
+                    <span class="preview-label" id="editPreviewLabel">Ảnh hiện tại</span>
                 </div>
 
                 <!-- Crop container -->
@@ -98,7 +98,7 @@ async function openEditModal(qrId) {
                             <img id="cropImage" src="" alt="Crop" />
                         </div>
                         <div class="crop-actions">
-                            <button type="button" class="btn-crop-apply" id="cropApply">✔ Áp dụng cắt</button>
+                            <button type="button" class="btn-crop-apply" id="cropApply">Áp dụng cắt</button>
                         </div>
                     </div>
                 </div>
@@ -106,7 +106,7 @@ async function openEditModal(qrId) {
                 <div class="field-error" id="editImageError">Vui lòng chọn ảnh mã QR hợp lệ!</div>
             </div>
 
-            <button type="submit" class="btn-submit">💾 Lưu thay đổi</button>
+            <button type="submit" class="btn-submit">Lưu thay đổi</button>
         </form>
     `;
     
@@ -418,7 +418,7 @@ document.addEventListener('click', function(e) {
         if (canvas) {
             const croppedDataUrl = canvas.toDataURL('image/png');
             document.getElementById('editImagePreview').src = croppedDataUrl;
-            document.getElementById('editPreviewLabel').textContent = '📷 Ảnh đã cắt';
+            document.getElementById('editPreviewLabel').textContent = 'Ảnh đã cắt';
             
             // Tạo file từ data URL để validate & submit
             const file = dataURLtoFile(croppedDataUrl, 'qr_edited.png');

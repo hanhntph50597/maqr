@@ -1221,7 +1221,7 @@ document.addEventListener('click', function (e) {
         previewContainer.classList.add('show');
         uploadImageBox.classList.add('hidden');
         const label = document.getElementById('uploadPreviewLabel');
-        if (label) label.textContent = '📷 Ảnh đã cắt';
+        if (label) label.textContent = 'Ảnh đã cắt';
 
         const file = dataURLtoFile(croppedDataUrl, 'qr_cropped.png');
         const dt = new DataTransfer();
