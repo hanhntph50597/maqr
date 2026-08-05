@@ -330,7 +330,7 @@ function validateQRImage(file) {
         }
 
         const img = new Image();
-        img.onload = function () {
+        img.onload = async function () {
             const ratio = this.width / this.height;
             const isSquare = ratio >= 0.7 && ratio <= 1.3;
 
@@ -341,7 +341,8 @@ function validateQRImage(file) {
                 });
                 return;
             }
-
+console.log("Image size:", this.width, this.height);
+console.log("File:", file.name, file.type, file.size);
             if (this.width > 5000 || this.height > 5000) {
                 resolve({
                     valid: false,
@@ -351,7 +352,7 @@ function validateQRImage(file) {
             }
 
             // Vẽ ảnh lên canvas để đọc QR
-const MAX_SIZE = 800;
+const MAX_SIZE = 1500;
 
 let width = this.width;
 let height = this.height;
@@ -368,12 +369,15 @@ if (width > height) {
     }
 }
 
-const canvas = document.createElement('canvas');
-canvas.width = width;
-canvas.height = height;
+const canvas = document.createElement("canvas");
+canvas.width = this.width;
+canvas.height = this.height;
 
-const ctx = canvas.getContext('2d');
-ctx.drawImage(this, 0, 0, width, height);
+const ctx = canvas.getContext("2d", {
+    willReadFrequently: true
+});
+
+ctx.drawImage(this, 0, 0);
 
 const imageData = ctx.getImageData(
     0,
@@ -382,13 +386,26 @@ const imageData = ctx.getImageData(
     canvas.height
 );
 
-// Đọc QR
-const code = jsQR(
-    imageData.data,
-    imageData.width,
-    imageData.height
-);
-console.log(canvas.width, canvas.height);
+const reader = new ZXing.BrowserQRCodeReader();
+
+try {
+    const result = await reader.decodeFromImageElement(img);
+
+    resolve({
+        valid: true,
+        message: "Ảnh QR hợp lệ",
+        isSquare,
+        width: this.width,
+        height: this.height,
+        qrContent: result.getText()
+    });
+} catch (err) {
+    resolve({
+        valid: false,
+        message: "Ảnh không chứa mã QR hợp lệ!"
+    });
+}
+
 console.log(code);
 
 // Không đọc được QR
@@ -770,7 +787,7 @@ function showDetail(qr) {
         <div class="detail-actions">
             <button class="btn-transfer" onclick="openTransfer('${qr.id}')">Chuyển khoản</button>
             ${isOwner ? `
-                <button class="btn-edit" onclick="openEditModal('${qr.id}')">✏️ Chỉnh sửa</button>
+                <button class="btn-edit" onclick="openEditModal('${qr.id}')">Chỉnh sửa</button>
                 <button class="btn-delete" onclick="deleteQR('${qr.id}')">Xóa mã QR</button>
             ` : ''}
             <button class="btn-close-detail" onclick="closeDetail()">Đóng</button>
@@ -918,10 +935,7 @@ function copyAllTransferInfo() {
 const transferModalClose = document.getElementById('transferModalClose');
 if (transferModalClose) transferModalClose.addEventListener('click', closeTransfer);
 
-window.addEventListener('click', function (e) {
-    const transferModal = document.getElementById('transferModal');
-    if (e.target === transferModal) closeTransfer();
-});
+// Đã tắt click ra ngoài để đóng transfer modal - chỉ đóng bằng nút X
 
 // ==========================================
 // ===== UPLOAD QR =====
@@ -1022,16 +1036,7 @@ document.addEventListener('paste', function (e) {
     }
 });
 
-window.addEventListener('click', function (e) {
-    if (e.target === uploadModal) {
-        uploadModal.style.display = 'none';
-        uploadForm.reset();
-        previewContainer.classList.remove('show');
-        uploadImageBox.classList.remove('hidden');
-        qrImage.value = '';
-        imagePreview.src = '';
-    }
-});
+// Đã tắt click ra ngoài để đóng upload modal - chỉ đóng bằng nút X
 
 uploadForm.addEventListener('submit', async function (e) {
     e.preventDefault();
@@ -1297,10 +1302,7 @@ searchInput.addEventListener('input', function () {
 // ===== CLICK OUTSIDE MODAL =====
 // ==========================================
 
-window.addEventListener('click', function (e) {
-    if (e.target === detailModal) closeDetail();
-    if (e.target === authModal) closeAuthModal();
-});
+// Đã tắt click ra ngoài để đóng detail/auth modal - chỉ đóng bằng nút X
 
 // ==========================================
 // ===== KHỞI CHẠY =====

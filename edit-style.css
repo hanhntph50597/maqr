@@ -85,6 +85,9 @@
     align-items: center;
     justify-content: center;
     gap: 4px;
+    box-sizing: border-box;
+    width: 100%;
+    margin: 0;
 }
 
 .edit-modal .upload-image-box:hover {

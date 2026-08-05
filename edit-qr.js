@@ -72,11 +72,11 @@ async function openEditModal(qrId) {
                 <label>Ảnh mã QR <span class="required">*</span></label>
 
                 <!-- Upload box (ẩn ban đầu vì đã có ảnh hiện tại) -->
-                <div class="upload-image-box" id="editUploadImageBox" style="display:none;">
+                <label class="upload-image-box" id="editUploadImageBox" style="display:none;" for="editImage">
                     <span class="upload-text">Nhấn để chọn ảnh</span>
                     <span class="upload-hint">PNG, JPG, WEBP (tối đa 5MB)</span>
                     <input type="file" id="editImage" accept="image/*" />
-                </div>
+                </label>
 
                 <!-- Preview (hiển thị ảnh hiện tại ban đầu) -->
                 <div class="preview-container show" id="editPreviewContainer">
@@ -97,7 +97,7 @@ async function openEditModal(qrId) {
                             <img id="cropImage" src="" alt="Crop" />
                         </div>
                         <div class="crop-actions">
-                            <button type="button" class="btn-crop-apply" id="cropApply">✔ Áp dụng cắt</button>
+                            <button type="button" class="btn-crop-apply" id="cropApply">Áp dụng cắt</button>
                         </div>
                     </div>
                 </div>
@@ -136,17 +136,11 @@ function escapeHtml(text) {
 
 // ===== SETUP EDIT EVENTS =====
 function setupEditEvents() {
-    // Close modal
+    // Close modal (chỉ đóng bằng nút X)
     const closeBtn = document.getElementById('editModalClose');
     if (closeBtn) {
         closeBtn.addEventListener('click', closeEditModal);
     }
-    
-    // Click outside
-    const editModal = document.getElementById('editModal');
-    editModal.addEventListener('click', function(e) {
-        if (e.target === this) closeEditModal();
-    });
     
     // Validate tên
     const editName = document.getElementById('editName');
@@ -208,14 +202,7 @@ function setupEditEvents() {
     const editPreviewLabel = document.getElementById('editPreviewLabel');
     const cropContainer = document.getElementById('cropContainer');
     
-    // Click upload box
-    editUploadBox.addEventListener('click', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        editImage.click();
-    });
-    
-    // File selected
+    // File selected (label for="editImage" sẽ tự mở file dialog khi click)
     editImage.addEventListener('change', function(e) {
         e.stopPropagation();
         if (this.files && this.files[0]) {
@@ -223,8 +210,14 @@ function setupEditEvents() {
         }
     });
     
+    // Ngăn sự kiện click của input lan ra ngoài (tránh đóng modal)
+    editImage.addEventListener('click', function(e) {
+        e.stopPropagation();
+    });
+    
     // Remove image
     editRemoveBtn.addEventListener('click', function(e) {
+        e.preventDefault();
         e.stopPropagation();
         // Ẩn preview, hiện upload box
         editPreviewContainer.classList.remove('show');
@@ -271,7 +264,7 @@ function handleNewEditImage(file) {
         editPreviewContainer.classList.add('show');
         editPreviewContainer.style.display = 'flex';
         editUploadBox.style.display = 'none';
-        editPreviewLabel.textContent = '📷 Ảnh mới';
+        editPreviewLabel.textContent = 'Ảnh mới';
         cropContainer.style.display = 'block';
         
         editCurrentImageData = dataUrl;
@@ -380,7 +373,8 @@ function initCropper(imageSrc) {
             cropper.destroy();
         }
         cropper = new Cropper(image, {
-            aspectRatio: 1,
+            // Không khóa tỷ lệ → kéo tự do chiều dài / chiều rộng
+            aspectRatio: NaN,
             viewMode: 1,
             dragMode: 'move',
             autoCropArea: 0.8,
@@ -411,14 +405,17 @@ document.addEventListener('click', function(e) {
     }
     // Apply crop
     if (e.target.id === 'cropApply' && cropper) {
+        // Lấy đúng kích thước vùng đã crop (không ép vuông)
         const canvas = cropper.getCroppedCanvas({
-            width: 800,
-            height: 800,
+            maxWidth: 1200,
+            maxHeight: 1200,
+            imageSmoothingEnabled: true,
+            imageSmoothingQuality: 'high',
         });
         if (canvas) {
             const croppedDataUrl = canvas.toDataURL('image/png');
             document.getElementById('editImagePreview').src = croppedDataUrl;
-            document.getElementById('editPreviewLabel').textContent = '📷 Ảnh đã cắt';
+            document.getElementById('editPreviewLabel').textContent = 'Ảnh đã cắt';
             
             // Tạo file từ data URL để validate & submit
             const file = dataURLtoFile(croppedDataUrl, 'qr_edited.png');
@@ -534,7 +531,7 @@ async function saveEdit(data) {
         // Cập nhật vào Firebase
         await database.ref(`${DB_QRS}/${editingQRId}`).update(data);
         
-        showToast('Đã cập nhật mã QR thành công!', 'success');
+        showToast('✅ Đã cập nhật mã QR thành công!', 'success');
         closeEditModal();
         
         // Refresh danh sách
@@ -548,6 +545,6 @@ async function saveEdit(data) {
         }
     } catch (error) {
         console.error('Lỗi cập nhật:', error);
-        showToast('Lỗi cập nhật: ' + error.message, 'error');
+        showToast('❌ Lỗi cập nhật: ' + error.message, 'error');
     }
 }

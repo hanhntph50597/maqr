@@ -675,6 +675,18 @@ header {
     margin: 0 auto !important;
 }
 
+.preview-container .preview-label {
+    display: inline-block;
+    margin-top: 8px;
+    font-size: 0.7rem;
+    color: #22c55e;
+    background: #dcfce7;
+    padding: 4px 14px;
+    border-radius: 12px;
+    font-weight: 500;
+    border: 1px solid #86efac;
+}
+
 /* ===== NÚT XÓA ẢNH ===== */
 .preview-container .btn-remove-image {
     position: absolute !important;
