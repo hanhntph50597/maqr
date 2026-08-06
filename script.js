@@ -5,6 +5,42 @@
 const DB_USERS = 'users';
 const DB_QRS = 'qrCodes';
 
+// ===== CACHE QR (tìm kiếm tức thì, không gọi Firebase mỗi lần gõ) =====
+let qrCache = null;
+let renderListSeq = 0;
+
+function invalidateQRCache() {
+    qrCache = null;
+}
+
+function removeVietnameseTones(str) {
+    if (!str) return '';
+    return String(str)
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/đ/g, 'd')
+        .replace(/Đ/g, 'D')
+        .toLowerCase();
+}
+
+/** Rỗng = tất cả. Có chữ = khớp tuyệt đối theo từ / cả tên (không phân biệt dấu). */
+function matchSearchName(name, query) {
+    const q = removeVietnameseTones(query || '').trim();
+    if (!q) return true;
+    const n = removeVietnameseTones(name || '').trim();
+    if (!n) return false;
+    if (n === q) return true;
+    const words = n.split(/\s+/).filter(Boolean);
+    const qWords = q.split(/\s+/).filter(Boolean);
+    if (qWords.length > 1) {
+        return qWords.every(function (qw) {
+            return words.some(function (w) { return w === qw; });
+        });
+    }
+    return words.some(function (w) { return w === q; });
+}
+
+
 // ==========================================
 // ===== AUTH - FIREBASE =====
 // ==========================================
@@ -119,64 +155,7 @@ function showSkeleton() {
     }
 }
 
-// ===== CẬP NHẬT HÀM RENDER USER LIST =====
-// Thêm vào đầu hàm renderUserList:
-async function renderUserList(filter = '') {
-    // Hiển thị skeleton khi bắt đầu tải
-    showSkeleton();
-
-    try {
-        const qrs = await getQRList();
-        const filtered = qrs.filter(qr =>
-            qr.name.toLowerCase().includes(filter.toLowerCase())
-        );
-
-        if (filtered.length === 0) {
-            userList.innerHTML = '';
-            emptyState.style.display = 'block';
-            return;
-        }
-        emptyState.style.display = 'none';
-
-        let html = '';
-        filtered.forEach(qr => {
-            const initial = getInitials(qr.name);
-            const bankClass = getBankClass(qr.bank);
-            html += `
-                <div class="user-item" data-id="${qr.id}">
-                    <div class="user-info">
-                        <div class="user-avatar ${bankClass}">${initial}</div>
-                        <div>
-                            <div class="user-name-text">${qr.name}</div>
-                            <div class="user-bank">${qr.bank}</div>
-                        </div>
-                    </div>
-                    <div class="user-initial">${initial}</div>
-                </div>
-            `;
-        });
-
-        userList.innerHTML = html;
-
-        document.querySelectorAll('.user-item').forEach(item => {
-            item.addEventListener('click', function () {
-                const id = this.dataset.id;
-                getQRList().then(qrs => {
-                    const qr = qrs.find(q => q.id === id);
-                    if (qr) showDetail(qr);
-                });
-            });
-        });
-    } catch (error) {
-        console.error('Lỗi tải dữ liệu:', error);
-        userList.innerHTML = '';
-        emptyState.style.display = 'block';
-        emptyState.innerHTML = `
-            <span>⚠️</span>
-            <p>Không thể tải dữ liệu. Vui lòng thử lại!</p>
-        `;
-    }
-}
+// renderUserList: xem hàm chính bên dưới
 
 // ===== CẬP NHẬT HÀM UPDATE UI =====
 function updateUI() {
@@ -245,20 +224,23 @@ function checkSession() {
 // ===== QR CODE - FIREBASE =====
 // ==========================================
 
-async function getQRList() {
+async function getQRList(forceRefresh) {
+    if (!forceRefresh && qrCache) {
+        return qrCache;
+    }
     try {
         const snapshot = await database.ref(DB_QRS).once('value');
         const data = snapshot.val();
-        if (data) {
-            return Object.keys(data).map(key => ({
-                id: key,
-                ...data[key]
-            }));
-        }
-        return [];
+        const list = data
+            ? Object.keys(data).map(function (key) {
+                return Object.assign({ id: key }, data[key]);
+            })
+            : [];
+        qrCache = list;
+        return list;
     } catch (error) {
         console.error('Lỗi lấy dữ liệu:', error);
-        return [];
+        return qrCache || [];
     }
 }
 
@@ -270,6 +252,7 @@ async function addQRCode(data) {
             uploadedAt: new Date().toISOString()
         };
         const newRef = await database.ref(DB_QRS).push(newQR);
+        invalidateQRCache();
         return { id: newRef.key, ...newQR };
     } catch (error) {
         console.error('Lỗi thêm dữ liệu:', error);
@@ -280,6 +263,7 @@ async function addQRCode(data) {
 async function deleteQRCode(id) {
     try {
         await database.ref(`${DB_QRS}/${id}`).remove();
+        invalidateQRCache();
         return true;
     } catch (error) {
         console.error('Lỗi xóa dữ liệu:', error);
@@ -668,81 +652,66 @@ function getInitials(name) {
 // ===== RENDER USER LIST =====
 // ==========================================
 
-async function renderUserList(filter = '') {
-    const qrs = await getQRList();
-    const filtered = qrs.filter(qr =>
-        qr.name.toLowerCase().includes(filter.toLowerCase())
-    );
+async function renderUserList(filter) {
+    const seq = ++renderListSeq;
+    const q = (filter == null ? '' : String(filter)).trim();
 
-    // Nếu đã đăng nhập và có filter nhưng không tìm thấy
-    if (currentUser && filter.trim() !== '' && filtered.length === 0) {
+    // Dùng cache nếu có → tìm ngay, không chờ mạng
+    let qrs = qrCache;
+    if (!qrs) {
+        qrs = await getQRList();
+        if (seq !== renderListSeq) return;
+    }
+
+    const filtered = q ? qrs.filter(function (qr) {
+        return matchSearchName(qr.name, q);
+    }) : qrs;
+
+    if (seq !== renderListSeq) return;
+
+    if (!filtered.length) {
         userList.innerHTML = '';
         emptyState.style.display = 'block';
-        emptyState.innerHTML = `
-            <span>🔍</span>
-            <p>Không tìm thấy mã QR nào cho "${filter}"</p>
-            <p style="font-size:0.8rem; color:rgba(255,255,255,0.2); margin-top:4px;">Vui lòng thử lại với từ khóa khác</p>
-        `;
+        if (q) {
+            emptyState.innerHTML = '<span>🔍</span><p>Không tìm thấy mã QR nào cho "' +
+                q.replace(/</g, '&lt;') + '</p>';
+        } else {
+            emptyState.innerHTML = currentUser
+                ? '<span>📭</span><p>Chưa có mã QR nào. Hãy thêm mã QR mới!</p>'
+                : '<span>📭</span><p>Chưa có mã QR nào. Hãy đăng nhập để thêm mới!</p>';
+        }
         return;
     }
 
-    // Nếu chưa đăng nhập và chưa có dữ liệu
-    if (!currentUser && qrs.length === 0) {
-        userList.innerHTML = '';
-        emptyState.style.display = 'block';
-        emptyState.innerHTML = `
-            <span>📭</span>
-            <p>Chưa có mã QR nào. Hãy đăng nhập để thêm mới!</p>
-        `;
-        return;
-    }
-
-    // Nếu đã đăng nhập nhưng chưa có dữ liệu
-    if (currentUser && qrs.length === 0) {
-        userList.innerHTML = '';
-        emptyState.style.display = 'block';
-        emptyState.innerHTML = `
-            <span>📭</span>
-            <p>Chưa có mã QR nào. Hãy thêm mã QR mới!</p>
-            <button class="btn-upload-empty" onclick="document.getElementById('uploadBtn').click()" style="margin-top:12px; padding:8px 20px; background:linear-gradient(135deg,#7c3aed,#4f46e5); color:white; border:none; border-radius:40px; cursor:pointer; font-weight:600; font-size:0.85rem;">
-                ➕ Thêm mã QR
-            </button>
-        `;
-        return;
-    }
-
-    // Trường hợp có dữ liệu và hiển thị bình thường
     emptyState.style.display = 'none';
-
-    let html = '';
-    filtered.forEach(qr => {
-        const initial = getInitials(qr.name);
-        const bankClass = getBankClass(qr.bank);
-        html += `
-            <div class="user-item" data-id="${qr.id}">
-                <div class="user-info">
-                    <div class="user-avatar ${bankClass}">${initial}</div>
-                    <div>
-                        <div class="user-name-text">${qr.name}</div>
-                        <div class="user-bank">${qr.bank}</div>
-                    </div>
-                </div>
-                <div class="user-initial">${initial}</div>
-            </div>
-        `;
-    });
-
+    var html = '';
+    for (var i = 0; i < filtered.length; i++) {
+        var qr = filtered[i];
+        var initial = getInitials(qr.name || '');
+        var bankClass = getBankClass(qr.bank);
+        html += '<div class="user-item" data-id="' + qr.id + '">' +
+            '<div class="user-info">' +
+            '<div class="user-avatar ' + bankClass + '">' + initial + '</div>' +
+            '<div><div class="user-name-text">' + String(qr.name || '').replace(/</g, '&lt;') + '</div>' +
+            '<div class="user-bank">' + String(qr.bank || '').replace(/</g, '&lt;') + '</div></div>' +
+            '</div></div>';
+    }
+    if (seq !== renderListSeq) return;
     userList.innerHTML = html;
 
-    document.querySelectorAll('.user-item').forEach(item => {
-        item.addEventListener('click', function () {
-            const id = this.dataset.id;
-            getQRList().then(qrs => {
-                const qr = qrs.find(q => q.id === id);
-                if (qr) showDetail(qr);
+    // Event delegation một lần
+    if (!userList._clickBound) {
+        userList._clickBound = true;
+        userList.addEventListener('click', function (e) {
+            var item = e.target.closest('.user-item');
+            if (!item) return;
+            var id = item.getAttribute('data-id');
+            getQRList().then(function (list) {
+                var found = list.find(function (x) { return x.id === id; });
+                if (found) showDetail(found);
             });
         });
-    });
+    }
 }
 
 // ==========================================
@@ -1378,13 +1347,7 @@ logoutBtn.addEventListener('click', function () {
     }
 });
 
-// ==========================================
-// ===== SEARCH =====
-// ==========================================
 
-searchInput.addEventListener('input', function () {
-    renderUserList(this.value);
-});
 
 // ==========================================
 // ===== CLICK OUTSIDE MODAL =====
