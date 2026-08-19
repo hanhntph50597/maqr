@@ -16,7 +16,7 @@ body {
 }
 
 .container {
-    max-width: 580px;
+    max-width: 960px;
     margin: 0 auto;
     padding: 0 16px;
     position: relative;
@@ -25,14 +25,14 @@ body {
 
 /* ===== HEADER ===== */
 header {
-    background: transparent;
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-    padding: 16px 0;
+    background: linear-gradient(135deg, rgba(203, 213, 225, 0.88) 0%, rgba(219, 234, 254, 0.88) 35%, rgba(250, 232, 255, 0.88) 70%, rgba(254, 226, 226, 0.88) 100%);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+    padding: 12px 0;
     position: sticky;
     top: 0;
-    z-index: 100;
+    z-index: 200;
 }
 
 .header-content {
@@ -48,7 +48,7 @@ header {
 }
 
 .logo h1 {
-    font-size: 1.3rem;
+    font-size: 1.45rem;
     font-weight: 700;
     color: #0f172a;
     display: flex;
@@ -198,7 +198,7 @@ header {
 /* ===== USER GRID ===== */
 .user-list {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     gap: 12px;
     margin-top: 4px;
     padding-bottom: 30px;
@@ -210,7 +210,7 @@ header {
     backdrop-filter: blur(8px) !important;
     -webkit-backdrop-filter: blur(8px) !important;
     border: 1px solid rgba(255, 255, 255, 0.3) !important;
-    border-radius: 20px !important;
+    border-radius: 16px !important;
     padding: 16px 8px !important;
     cursor: pointer;
     display: flex;
@@ -222,7 +222,7 @@ header {
         0 4px 15px rgba(0, 0, 0, 0.06),
         inset 0 1px 2px rgba(255, 255, 255, 0.8) !important;
     transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease !important;
-    min-height: 120px;
+    min-height: 130px;
     overflow: hidden;
 }
 
@@ -245,8 +245,8 @@ header {
 
 /* ===== AVATAR ===== */
 .user-item .user-avatar {
-    width: 50px !important;
-    height: 50px !important;
+    width: 52px !important;
+    height: 52px !important;
     border-radius: 50% !important;
     display: flex;
     align-items: center;
@@ -275,14 +275,19 @@ header {
 /* ===== TÊN VÀ NGÂN HÀNG ===== */
 .user-item .user-name-text {
     font-weight: 600;
-    font-size: 0.85rem !important;
+    font-size: 0.82rem !important;
     color: #1e293b !important;
     margin-top: 4px;
-    line-height: 1.3;
+    line-height: 1.25;
     max-width: 100%;
     overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    white-space: normal;
+    word-break: break-word;
+    text-align: center;
+    padding: 0 2px;
 }
 
 .user-item .user-bank {
@@ -290,6 +295,11 @@ header {
     color: #64748b !important;
     font-weight: 500;
     line-height: 1.2;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding: 0 2px;
 }
 
 .user-item .user-initial {
