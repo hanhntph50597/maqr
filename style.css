@@ -216,8 +216,8 @@ header {
     backdrop-filter: blur(16px) saturate(160%) !important;
     -webkit-backdrop-filter: blur(16px) saturate(160%) !important;
     border: 1px solid rgba(255, 255, 255, 0.55) !important;
-    border-radius: 22px !important;
-    padding: 18px 10px !important;
+    border-radius: 24px !important;
+    padding: 22px 12px 18px !important;
     cursor: pointer;
     display: flex;
     flex-direction: column;
@@ -228,7 +228,7 @@ header {
         0 8px 28px rgba(31, 38, 135, 0.08),
         inset 0 1px 0 rgba(255, 255, 255, 0.75) !important;
     transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease !important;
-    min-height: 135px;
+    min-height: 155px;
     overflow: hidden;
 }
 
@@ -245,46 +245,45 @@ header {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 6px;
+    gap: 8px;
     width: 100%;
 }
 
 /* ===== AVATAR ===== */
 .user-item .user-avatar {
-    width: 52px !important;
-    height: 52px !important;
+    width: 64px !important;
+    height: 64px !important;
     border-radius: 50% !important;
     display: flex;
     align-items: center;
     justify-content: center;
     font-weight: 700;
-    font-size: 1.1rem !important;
+    font-size: 1.25rem !important;
     color: #ffffff;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    border: 2px solid rgba(255, 255, 255, 0.3) !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+    border: none !important;
     box-shadow:
-        0 4px 12px rgba(0, 0, 0, 0.12),
-        inset 0 -2px 6px rgba(0, 0, 0, 0.1),
-        inset 0 2px 6px rgba(255, 255, 255, 0.4) !important;
-    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        inset 0 3px 6px rgba(255, 255, 255, 0.45),
+        inset 0 -3px 6px rgba(0, 0, 0, 0.18) !important;
+    transition: transform 0.3s ease;
     flex-shrink: 0;
+    margin-bottom: 4px;
 }
 
 .user-item:hover .user-avatar {
-    transform: scale(1.08) rotate(4deg);
+    transform: scale(1.08);
     box-shadow:
-        0 8px 20px rgba(0, 0, 0, 0.2),
-        inset 0 -3px 8px rgba(0, 0, 0, 0.15),
-        inset 0 3px 8px rgba(255, 255, 255, 0.5) !important;
+        inset 0 3px 8px rgba(255, 255, 255, 0.5),
+        inset 0 -3px 8px rgba(0, 0, 0, 0.2) !important;
 }
 
 /* ===== TÊN VÀ NGÂN HÀNG ===== */
 .user-item .user-name-text {
-    font-weight: 600;
-    font-size: 0.82rem !important;
+    font-weight: 650;
+    font-size: 0.9rem !important;
     color: #1e293b !important;
-    margin-top: 4px;
-    line-height: 1.25;
+    margin-top: 2px;
+    line-height: 1.3;
     max-width: 100%;
     overflow: hidden;
     display: -webkit-box;
@@ -293,19 +292,19 @@ header {
     white-space: normal;
     word-break: break-word;
     text-align: center;
-    padding: 0 2px;
+    padding: 0 4px;
 }
 
 .user-item .user-bank {
-    font-size: 0.7rem !important;
-    color: #64748b !important;
+    font-size: 0.78rem !important;
+    color: #475569 !important;
     font-weight: 500;
-    line-height: 1.2;
+    line-height: 1.25;
     max-width: 100%;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    padding: 0 2px;
+    padding: 0 4px;
 }
 
 .user-item .user-initial {
@@ -314,47 +313,47 @@ header {
 
 /* ===== GRADIENT AVATAR ===== */
 .bank-techcombank {
-    background: linear-gradient(145deg, #0066b3, #003366) !important;
+    background: linear-gradient(160deg, #4dc3ff 0%, #0090d0 45%, #005a9c 100%) !important;
 }
 
 .bank-vietcombank {
-    background: linear-gradient(145deg, #00cc66, #006633) !important;
+    background: linear-gradient(160deg, #3dff9a 0%, #00c853 45%, #008c3a 100%) !important;
 }
 
 .bank-bidv {
-    background: linear-gradient(145deg, #3399ff, #0044aa) !important;
+    background: linear-gradient(160deg, #7ec8ff 0%, #2b7de9 45%, #0d4db5 100%) !important;
 }
 
 .bank-mbbank {
-    background: linear-gradient(145deg, #ff4444, #aa0000) !important;
+    background: linear-gradient(160deg, #ff7a7a 0%, #e52525 45%, #b01010 100%) !important;
 }
 
 .bank-vpbank {
-    background: linear-gradient(145deg, #ff6b6b, #cc0033) !important;
+    background: linear-gradient(160deg, #ff8a9a 0%, #e83a5a 45%, #c01a3a 100%) !important;
 }
 
 .bank-tpbank {
-    background: linear-gradient(145deg, #cc88ff, #8833cc) !important;
+    background: linear-gradient(160deg, #e0b0ff 0%, #a855f7 45%, #7c3aed 100%) !important;
 }
 
 .bank-momo {
-    background: linear-gradient(145deg, #ff66b2, #cc0066) !important;
+    background: linear-gradient(160deg, #ff9ec8 0%, #f43f8a 45%, #db2777 100%) !important;
 }
 
 .bank-vietinbank {
-    background: linear-gradient(145deg, #00cccc, #006666) !important;
+    background: linear-gradient(160deg, #5eecd9 0%, #14b8a6 45%, #0d9488 100%) !important;
 }
 
 .bank-acb {
-    background: linear-gradient(145deg, #66aaff, #0044cc) !important;
+    background: linear-gradient(160deg, #93c5fd 0%, #3b82f6 45%, #1d4ed8 100%) !important;
 }
 
 .bank-sacombank {
-    background: linear-gradient(145deg, #66aaff, #003388) !important;
+    background: linear-gradient(160deg, #8ab4ff 0%, #3b6ef5 45%, #1e40af 100%) !important;
 }
 
 .bank-khac {
-    background: linear-gradient(145deg, #99aabb, #556677) !important;
+    background: linear-gradient(160deg, #c0c8d4 0%, #788498 45%, #556070 100%) !important;
 }
 
 /* ===== EMPTY STATE ===== */
@@ -520,91 +519,23 @@ header {
     word-break: break-all;
 }
 
-.detail-modal .btn-copy {
-    background: #dbeafe;
-    border: none;
-    padding: 3px 12px;
-    border-radius: 16px;
-    font-size: 0.6rem;
-    font-weight: 600;
-    color: #2563eb;
-    cursor: pointer;
-    transition: all 0.2s;
-    white-space: nowrap;
-    flex-shrink: 0;
-}
+/* */
 
-.detail-modal .btn-copy:hover {
-    background: #bfdbfe;
-    transform: scale(1.03);
-}
+/* */
 
-.detail-actions {
-    display: flex;
-    gap: 6px;
-    margin-top: 14px;
-    flex-wrap: nowrap;
-}
+/* detail-actions moved */
 
-.detail-actions .btn-transfer {
-    flex: 1;
-    padding: 8px 10px;
-    background: #dbeafe;
-    color: #2563eb;
-    border: none;
-    border-radius: 10px;
-    font-weight: 600;
-    font-size: 0.75rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    white-space: nowrap;
-    text-align: center;
-}
+/* */
 
-.detail-actions .btn-transfer:hover {
-    background: #bfdbfe;
-    transform: translateY(-2px);
-}
+/* */
 
-.detail-actions .btn-delete {
-    flex: 1;
-    padding: 8px 10px;
-    background: #fee2e2;
-    color: #ef4444;
-    border: none;
-    border-radius: 10px;
-    font-weight: 600;
-    font-size: 0.75rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    white-space: nowrap;
-    text-align: center;
-}
+/* */
 
-.detail-actions .btn-delete:hover {
-    background: #fecaca;
-    transform: translateY(-2px);
-}
+/* */
 
-.detail-actions .btn-close-detail {
-    flex: 1;
-    padding: 8px 10px;
-    background: #f1f5f9;
-    color: #475569;
-    border: none;
-    border-radius: 10px;
-    font-weight: 600;
-    font-size: 0.75rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    white-space: nowrap;
-    text-align: center;
-}
+/* */
 
-.detail-actions .btn-close-detail:hover {
-    background: #e2e8f0;
-    transform: translateY(-2px);
-}
+/* */
 
 .detail-modal .admin-badge {
     text-align: center;
@@ -1035,28 +966,26 @@ header {
     }
 
     .user-item {
-        padding: 14px 8px !important;
-        min-height: 105px;
-        border-radius: 16px !important;
+        padding: 16px 10px 14px !important;
+        min-height: 130px;
+        border-radius: 20px !important;
     }
 
     .user-item .user-avatar {
-        width: 42px !important;
-        height: 42px !important;
-        font-size: 0.95rem !important;
+        width: 52px !important;
+        height: 52px !important;
+        font-size: 1.05rem !important;
     }
 
     .user-item .user-name-text {
-        font-size: 0.78rem !important;
+        font-size: 0.8rem !important;
     }
 
     .user-item .user-bank {
-        font-size: 0.65rem !important;
+        font-size: 0.7rem !important;
     }
 
-    .detail-actions {
-        flex-direction: column;
-    }
+    /* detail-actions moved */
 
     .detail-modal .detail-row {
         flex-direction: column;
@@ -1372,23 +1301,99 @@ header {
 }
 
 /* ===== BUTTON EDIT ===== */
-.detail-actions .btn-edit {
+/* */
+
+/* */
+
+
+/* ===== UNIFIED DETAIL BUTTONS ===== */
+
+.detail-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 16px;
+    flex-wrap: nowrap;
+}
+
+.detail-actions .btn-transfer,
+.detail-actions .btn-edit,
+.detail-actions .btn-delete,
+.detail-actions .btn-close-detail {
     flex: 1;
-    padding: 8px 10px;
-    background: #fef3c7;
-    color: #d97706;
-    border: none;
-    border-radius: 10px;
+    padding: 10px 8px;
+    border: 1px solid rgba(255, 255, 255, 0.55);
+    border-radius: 14px;
     font-weight: 600;
     font-size: 0.75rem;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.25s ease;
     white-space: nowrap;
     text-align: center;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: none;
 }
 
-.detail-actions .btn-edit:hover {
-    background: #fde68a;
+.detail-actions .btn-transfer {
+    background: rgba(59, 130, 246, 0.15);
+    color: #2563eb;
+    border-color: rgba(59, 130, 246, 0.25);
+}
+
+.detail-actions .btn-transfer:hover {
+    background: rgba(59, 130, 246, 0.28);
     transform: translateY(-2px);
 }
 
+.detail-actions .btn-edit {
+    background: rgba(245, 158, 11, 0.15);
+    color: #d97706;
+    border-color: rgba(245, 158, 11, 0.25);
+}
+
+.detail-actions .btn-edit:hover {
+    background: rgba(245, 158, 11, 0.28);
+    transform: translateY(-2px);
+}
+
+.detail-actions .btn-delete {
+    background: rgba(239, 68, 68, 0.12);
+    color: #dc2626;
+    border-color: rgba(239, 68, 68, 0.22);
+}
+
+.detail-actions .btn-delete:hover {
+    background: rgba(239, 68, 68, 0.25);
+    transform: translateY(-2px);
+}
+
+.detail-actions .btn-close-detail {
+    background: rgba(100, 116, 139, 0.1);
+    color: #475569;
+    border-color: rgba(100, 116, 139, 0.2);
+}
+
+.detail-actions .btn-close-detail:hover {
+    background: rgba(100, 116, 139, 0.2);
+    transform: translateY(-2px);
+}
+
+.detail-modal .btn-copy {
+    background: rgba(59, 130, 246, 0.12);
+    border: 1px solid rgba(59, 130, 246, 0.2);
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 0.65rem;
+    font-weight: 600;
+    color: #2563eb;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+    flex-shrink: 0;
+    box-shadow: none;
+}
+
+.detail-modal .btn-copy:hover {
+    background: rgba(59, 130, 246, 0.22);
+    transform: scale(1.03);
+}
