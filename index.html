@@ -4,10 +4,19 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#0f172a" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="QR Manager" />
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="apple-touch-icon" href="pwa/icon-192.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="pwa/icon-192.png" />
+
     <title>Quản lý mã QR</title>
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="css/style.css" />
       <!-- ===== CSS CHỈNH SỬA QR (THÊM MỚI) ===== -->
-    <link rel="stylesheet" href="edit-style.css" />
+    <link rel="stylesheet" href="css/edit-style.css" />
     <!-- ===== FIREBASE SDK ===== -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
@@ -19,8 +28,6 @@
     <script src="database/firebase-config.js"></script>
 </head>
 
-<script src="https://unpkg.com/@zxing/library@latest"></script> <!-- ===== thư viện zXing để đọc QR từ hình ảnh ===== -->
-<script src="https://cdn.jsdelivr.net/npm/jsqr/dist/jsQR.js"></script> <!-- ===== thư viện jsQR để đọc QR từ hình ảnh ===== -->
 <body>
 
     <!-- ===== HEADER ===== -->
@@ -31,6 +38,7 @@
                     <h1>✨ Quản lý mã QR</h1>
                 </div>
                 <div class="header-actions">
+                    <button class="btn-manage" id="btnInstallPwa" type="button" style="display:none;" title="Cài đặt app">Cài app</button>
                     <div id="authSection">
                         <button class="btn-manage" id="manageBtn">Đăng nhập</button>
                     </div>
@@ -183,12 +191,17 @@
         <!-- Nội dung sẽ được JS tạo -->
     </div>
 </div>
-<script src="edit-qr.js"></script>
-<script src="validate/validate_qrName.js"></script>
-<script src="validate/validate_bankName.js"></script>
-<script src="validate/validate_QRImage_Required.js"></script>
+
+    <!-- ===== QR libraries (ZXing + jsQR fallback) ===== -->
+    <script src="https://unpkg.com/@zxing/library@0.20.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
+    <script src="lib/qr/read-qr.js"></script>
+
+<script src="js/edit-qr.js"></script>
 <script src="validate/validate_searchName.js"></script>
-    <script src="script.js"></script>
+<script src="validate/validate_search_name.js"></script>
+<script src="js/script.js"></script>
+    <script src="js/pwa.js"></script>
   
     
 </body>
