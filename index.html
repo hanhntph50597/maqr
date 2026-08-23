@@ -3,8 +3,8 @@
 
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>QR chuyển khoản</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover" />
+    <title>Quản lý mã QR</title>
     <link rel="stylesheet" href="style.css" />
       <!-- ===== CSS CHỈNH SỬA QR (THÊM MỚI) ===== -->
     <link rel="stylesheet" href="edit-style.css" />
@@ -28,7 +28,7 @@
         <div class="container">
             <div class="header-content">
                 <div class="logo">
-                    <h1>✨ QR chuyển khoản</h1>
+                    <h1>✨ Quản lý mã QR</h1>
                 </div>
                 <div class="header-actions">
                     <div id="authSection">
@@ -175,32 +175,7 @@
         <div class="modal-content auth-modal" id="authFormContainer"></div>
     </div>
 
-    <!-- ===== MODAL TRANSFER (DONATE) ===== -->
-    <div class="modal transfer-modal" id="transferModal">
-        <div class="modal-content">
-            <span class="modal-close" id="transferModalClose">&times;</span>
-            <h2 class="modal-title" style="text-align:center; font-size:1.5rem;">Donate thì làm</h2>
-            <p style="text-align:center; color:#64748b; margin-bottom:16px; font-size:0.9rem;">Quét mã QR hoặc chuyển
-                khoản theo thông tin bên dưới</p>
-
-            <!-- QR Code -->
-            <div class="transfer-qr-container">
-                <img id="transferQRImage" src="" alt="QR Code" />
-            </div>
-
-            <!-- Thông tin chuyển khoản -->
-            <div id="transferInfo">
-                <!-- Thông tin sẽ được JS điền -->
-            </div>
-
-            <div class="transfer-actions">
-                <button class="btn-copy-all" onclick="copyAllTransferInfo()"> Sao chép tất cả</button>
-                <button class="btn-close-detail" onclick="closeTransfer()">Đóng</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- ===== FILE INPUT HIDDEN ===== -->
+<!-- ===== FILE INPUT HIDDEN ===== -->
     <input type="file" id="fileInput" accept="image/*" style="display:none;" />
 <!-- ===== MODAL CHỈNH SỬA ===== -->
 <div class="modal" id="editModal">

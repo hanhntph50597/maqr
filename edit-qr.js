@@ -267,7 +267,7 @@ function handleNewEditImage(file) {
         editPreviewContainer.classList.add('show');
         editPreviewContainer.style.display = 'flex';
         editUploadBox.style.display = 'none';
-        editPreviewLabel.textContent = 'Ảnh mới';
+        editPreviewLabel.textContent = '📷 Ảnh mới';
         cropContainer.style.display = 'block';
         
         editCurrentImageData = dataUrl;
@@ -533,7 +533,7 @@ async function saveEdit(data) {
     try {
         // Cập nhật vào Firebase
         await database.ref(`${DB_QRS}/${editingQRId}`).update(data);
-        if (typeof invalidateQRCache === 'function') invalidateQRCache();
+        if (typeof invalidateQRCache === "function") invalidateQRCache();
         
         showToast('Đã cập nhật mã QR thành công!', 'success');
         closeEditModal();
