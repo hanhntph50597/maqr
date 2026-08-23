@@ -10,8 +10,10 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="QR Manager" />
     <link rel="manifest" href="manifest.webmanifest" />
-    <link rel="apple-touch-icon" href="pwa/icon-192.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="pwa/favicon-32.png" />
     <link rel="icon" type="image/png" sizes="192x192" href="pwa/icon-192.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="pwa/apple-touch-icon.png" />
+    <link rel="apple-touch-icon" href="pwa/icon-192.png" />
 
     <title>Quản lý mã QR</title>
     <link rel="stylesheet" href="css/style.css" />
@@ -195,6 +197,7 @@
     <!-- ===== QR libraries (ZXing + jsQR fallback) ===== -->
     <script src="https://unpkg.com/@zxing/library@0.20.0"></script>
     <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
+    <script src="lib/image-optimize.js"></script>
     <script src="lib/qr/read-qr.js"></script>
 
 <script src="js/edit-qr.js"></script>
