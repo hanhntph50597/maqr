@@ -40,6 +40,7 @@ function matchSearchName(name, query) {
     return words.some(function (w) { return w === q; });
 }
 
+
 // ==========================================
 // ===== AUTH - FIREBASE =====
 // ==========================================
@@ -753,7 +754,8 @@ function showDetail(qr) {
         </div>
         
         <div class="detail-actions">
-${isOwner ? `
+            <button class="btn-transfer" onclick="openTransfer('${qr.id}')">Chuyển khoản</button>
+            ${isOwner ? `
                 <button class="btn-edit" onclick="openEditModal('${qr.id}')">Chỉnh sửa</button>
                 <button class="btn-delete" onclick="deleteQR('${qr.id}')">Xóa mã QR</button>
             ` : ''}
@@ -799,6 +801,111 @@ async function deleteQR(id) {
 
 // ==========================================
 // ===== TRANSFER (DONATE) - LUÔN HIỂN THỊ QR CỦA NGUYỄN TRỌNG HẠNH =====
+// ==========================================
+
+let currentTransferQR = null;
+
+async function openTransfer(id) {
+    // Lấy tất cả QR từ database
+    const qrs = await getQRList();
+
+    // Tìm QR của Nguyễn Trọng Hạnh
+    const defaultQR = qrs.find(q => q.name === 'Nguyễn Trọng Hạnh');
+
+    // Nếu không tìm thấy Nguyễn Trọng Hạnh, lấy QR đầu tiên
+    const qr = defaultQR || qrs[0];
+
+    if (!qr) {
+        showToast('Không tìm thấy mã QR!', 'error');
+        return;
+    }
+
+    currentTransferQR = qr;
+
+    // Set ảnh QR
+    const transferQRImage = document.getElementById('transferQRImage');
+    if (transferQRImage) {
+        transferQRImage.src = qr.imageData;
+    }
+
+    // Set thông tin
+    const transferInfo = document.getElementById('transferInfo');
+    if (transferInfo) {
+        transferInfo.innerHTML = `
+            <div class="info-row">
+                <span class="label">Người nhận</span>
+                <span class="value">${qr.name}</span>
+            </div>
+            <div class="info-row">
+                <span class="label">Ngân hàng</span>
+                <span class="value">${qr.bank}</span>
+            </div>
+            <div class="info-row">
+                <span class="label">Số tài khoản</span>
+                <span class="value">
+                    ${qr.accountNumber}
+                    <button class="btn-copy-transfer" onclick="copyText('${qr.accountNumber}')"> Copy</button>
+                </span>
+            </div>
+            <div class="info-row">
+                <span class="label">Chủ tài khoản</span>
+                <span class="value">
+                    ${qr.accountHolder}
+                    <button class="btn-copy-transfer" onclick="copyText('${qr.accountHolder}')"> Copy</button>
+                </span>
+            </div>
+            <div class="info-row" style="border-bottom: none; padding-top:8px; margin-top:4px; border-top: 2px dashed #dbeafe;">
+                <span class="label" style="color:#ef4444; font-weight:600;"> Nội dung</span>
+                <span class="value" style="color:#ef4444; font-weight:700;">Donate</span>
+            </div>
+        `;
+    }
+
+    const transferModal = document.getElementById('transferModal');
+    if (transferModal) transferModal.style.display = 'flex';
+}
+
+function closeTransfer() {
+    const transferModal = document.getElementById('transferModal');
+    if (transferModal) transferModal.style.display = 'none';
+    currentTransferQR = null;
+}
+
+// Copy tất cả thông tin chuyển khoản
+function copyAllTransferInfo() {
+    if (!currentTransferQR) {
+        showToast('Không có thông tin chuyển khoản!', 'error');
+        return;
+    }
+
+    const transferText =
+        `💝 DONATE\n\n` +
+        `🏦 Ngân hàng: ${currentTransferQR.bank}\n` +
+        `💳 Số tài khoản: ${currentTransferQR.accountNumber}\n` +
+        `👤 Chủ tài khoản: ${currentTransferQR.accountHolder}\n` +
+        `📝 Nội dung: Donate\n` +
+        `👤 Người nhận: ${currentTransferQR.name}`;
+
+    navigator.clipboard.writeText(transferText).then(() => {
+        showToast(' Đã sao chép tất cả thông tin!', 'success');
+    }).catch(() => {
+        // Fallback
+        const textarea = document.createElement('textarea');
+        textarea.value = transferText;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+        showToast(' Đã sao chép tất cả thông tin!', 'success');
+    });
+}
+
+// Event listeners cho transfer modal
+const transferModalClose = document.getElementById('transferModalClose');
+if (transferModalClose) transferModalClose.addEventListener('click', closeTransfer);
+
+// Chỉ đóng popup bằng nút X
+
 // ==========================================
 // ===== UPLOAD QR =====
 // ==========================================
@@ -1058,6 +1165,7 @@ qrImage.addEventListener('change', function () {
 // }
 });
 
+
 // ===== CROP CONTROLS (THÊM MỚI QR) =====
 document.addEventListener('click', function (e) {
     if (e.target.id === 'uploadCropRotateLeft' && uploadCropper) {
@@ -1238,6 +1346,8 @@ logoutBtn.addEventListener('click', function () {
         showToast('Đã đăng xuất!', 'info');
     }
 });
+
+
 
 // ==========================================
 // ===== CLICK OUTSIDE MODAL =====

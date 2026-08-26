@@ -3,19 +3,8 @@
 
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover" />
-    <meta name="theme-color" content="#0f172a" />
-    <meta name="mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <meta name="apple-mobile-web-app-title" content="QR Manager" />
-    <link rel="manifest" href="manifest.webmanifest" />
-    <link rel="icon" type="image/png" sizes="32x32" href="pwa/favicon-32.png" />
-    <link rel="icon" type="image/png" sizes="192x192" href="pwa/icon-192.png" />
-    <link rel="apple-touch-icon" sizes="180x180" href="pwa/apple-touch-icon.png" />
-    <link rel="apple-touch-icon" href="pwa/icon-192.png" />
-
-    <title>Quản lý mã QR</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>QR chuyển khoản</title>
     <link rel="stylesheet" href="css/style.css" />
       <!-- ===== CSS CHỈNH SỬA QR (THÊM MỚI) ===== -->
     <link rel="stylesheet" href="css/edit-style.css" />
@@ -30,6 +19,8 @@
     <script src="database/firebase-config.js"></script>
 </head>
 
+<script src="https://unpkg.com/@zxing/library@latest"></script> <!-- ===== thư viện zXing để đọc QR từ hình ảnh ===== -->
+<script src="https://cdn.jsdelivr.net/npm/jsqr/dist/jsQR.js"></script> <!-- ===== thư viện jsQR để đọc QR từ hình ảnh ===== -->
 <body>
 
     <!-- ===== HEADER ===== -->
@@ -37,10 +28,9 @@
         <div class="container">
             <div class="header-content">
                 <div class="logo">
-                    <h1>✨ Quản lý mã QR</h1>
+                    <h1>✨ QR chuyển khoản</h1>
                 </div>
                 <div class="header-actions">
-                    <button class="btn-manage" id="btnInstallPwa" type="button" style="display:none;" title="Cài đặt app">Cài app</button>
                     <div id="authSection">
                         <button class="btn-manage" id="manageBtn">Đăng nhập</button>
                     </div>
@@ -185,7 +175,32 @@
         <div class="modal-content auth-modal" id="authFormContainer"></div>
     </div>
 
-<!-- ===== FILE INPUT HIDDEN ===== -->
+    <!-- ===== MODAL TRANSFER (DONATE) ===== -->
+    <div class="modal transfer-modal" id="transferModal">
+        <div class="modal-content">
+            <span class="modal-close" id="transferModalClose">&times;</span>
+            <h2 class="modal-title" style="text-align:center; font-size:1.5rem;">Donate thì làm</h2>
+            <p style="text-align:center; color:#64748b; margin-bottom:16px; font-size:0.9rem;">Quét mã QR hoặc chuyển
+                khoản theo thông tin bên dưới</p>
+
+            <!-- QR Code -->
+            <div class="transfer-qr-container">
+                <img id="transferQRImage" src="" alt="QR Code" />
+            </div>
+
+            <!-- Thông tin chuyển khoản -->
+            <div id="transferInfo">
+                <!-- Thông tin sẽ được JS điền -->
+            </div>
+
+            <div class="transfer-actions">
+                <button class="btn-copy-all" onclick="copyAllTransferInfo()"> Sao chép tất cả</button>
+                <button class="btn-close-detail" onclick="closeTransfer()">Đóng</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== FILE INPUT HIDDEN ===== -->
     <input type="file" id="fileInput" accept="image/*" style="display:none;" />
 <!-- ===== MODAL CHỈNH SỬA ===== -->
 <div class="modal" id="editModal">
@@ -193,18 +208,12 @@
         <!-- Nội dung sẽ được JS tạo -->
     </div>
 </div>
-
-    <!-- ===== QR libraries (ZXing + jsQR fallback) ===== -->
-    <script src="https://unpkg.com/@zxing/library@0.20.0"></script>
-    <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
-    <script src="lib/image-optimize.js"></script>
-    <script src="lib/qr/read-qr.js"></script>
-
 <script src="js/edit-qr.js"></script>
-<script src="validate/validate_searchName.js"></script>
-<script src="validate/validate_search_name.js"></script>
-<script src="js/script.js"></script>
-    <script src="js/pwa.js"></script>
+<script src="js/validate/validate_qrName.js"></script>
+<script src="js/validate/validate_bankName.js"></script>
+<script src="js/validate/validate_QRImage_Required.js"></script>
+<script src="js/validate/validate_searchName.js"></script>
+    <script src="js/script.js"></script>
   
     
 </body>

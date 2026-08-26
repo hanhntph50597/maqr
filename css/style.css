@@ -16,13 +16,11 @@ body {
 }
 
 .container {
-    max-width: 1100px;
+    max-width: 960px;
     margin: 0 auto;
     padding: 0 16px;
     position: relative;
     z-index: 1;
-    width: 100%;
-    box-sizing: border-box;
 }
 
 /* ===== HEADER ===== */
@@ -206,22 +204,14 @@ header {
 /* ===== USER GRID ===== */
 .user-list {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 14px;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
     margin-top: 4px;
-    padding-bottom: 32px;
-    width: 100%;
-    box-sizing: border-box;
-}
-.user-list > * {
-    min-width: 0;
+    padding-bottom: 30px;
 }
 
 /* ===== USER ITEM ===== */
 .user-item {
-    content-visibility: auto;
-    contain-intrinsic-size: auto 155px;
-    contain: layout style paint;
     background: rgba(255, 255, 255, 0.38) !important;
     backdrop-filter: blur(16px) saturate(160%) !important;
     -webkit-backdrop-filter: blur(16px) saturate(160%) !important;
@@ -238,7 +228,6 @@ header {
         0 8px 28px rgba(31, 38, 135, 0.08),
         inset 0 1px 0 rgba(255, 255, 255, 0.75) !important;
     transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease !important;
-    min-width: 0;
     min-height: 155px;
     overflow: hidden;
 }
@@ -484,13 +473,12 @@ header {
 }
 
 .detail-modal .qr-image-container {
-    background: #1e293b !important;
-    border-radius: 18px !important;
-    padding: 16px !important;
-    margin: 0 0 14px 0 !important;
+    background: #f8fafc;
+    border-radius: 14px;
+    padding: 12px;
+    margin: 0 0 14px 0;
     text-align: center;
-    border: 1px solid rgba(255, 255, 255, 0.12) !important;
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    border: 1px solid #e2e8f0;
 }
 
 .detail-modal .qr-image-container img {
@@ -841,10 +829,126 @@ header {
     border-color: #22c55e !important;
 }
 
+/* ===== TRANSFER MODAL (DONATE) ===== */
+.transfer-modal .modal-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 4px;
+    color: #1e293b;
+    text-align: center;
+}
+
+.transfer-modal .transfer-qr-container {
+    background: #ffffff;
+    border-radius: 14px;
+    padding: 12px;
+    margin: 0 auto 14px auto;
+    text-align: center;
+    border: 2px solid #e2e8f0;
+    max-width: 220px;
+}
+
+.transfer-modal .transfer-qr-container img {
+    max-width: 100%;
+    max-height: 200px;
+    border-radius: 8px;
+    display: block;
+    margin: 0 auto;
+}
+
+.transfer-modal #transferInfo {
+    background: #f8fafc;
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-bottom: 16px;
+    border: 1px solid #e2e8f0;
+}
+
+.transfer-modal #transferInfo .info-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 0;
+    font-size: 0.85rem;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.transfer-modal #transferInfo .info-row:last-child {
+    border-bottom: none;
+}
+
+.transfer-modal #transferInfo .info-row .label {
+    color: #64748b;
+    font-weight: 500;
+}
+
+.transfer-modal #transferInfo .info-row .value {
+    color: #1e293b;
+    font-weight: 600;
+    text-align: right;
+    word-break: break-all;
+}
+
+.transfer-modal .transfer-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 4px;
+}
+
+.transfer-modal .btn-copy-all {
+    flex: 2;
+    padding: 10px;
+    background: #dbeafe;
+    color: #2563eb;
+    border: none;
+    border-radius: 10px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.transfer-modal .btn-copy-all:hover {
+    background: #bfdbfe;
+    transform: translateY(-2px);
+}
+
+.transfer-modal .btn-close-detail {
+    flex: 1;
+    padding: 10px;
+    background: #f1f5f9;
+    color: #475569;
+    border: none;
+    border-radius: 10px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.transfer-modal .btn-close-detail:hover {
+    background: #e2e8f0;
+    transform: translateY(-2px);
+}
+
 /* ===== NÚT COPY TRONG TRANSFER MODAL ===== */
+.btn-copy-transfer {
+    background: #dbeafe;
+    border: none;
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 0.6rem;
+    font-weight: 600;
+    color: #2563eb;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+    margin-left: 6px;
+}
 
-
-
+.btn-copy-transfer:hover {
+    background: #bfdbfe;
+    transform: scale(1.03);
+}
 
 /* ===== RESPONSIVE ===== */
 @media (max-width: 650px) {
@@ -916,7 +1020,9 @@ header {
         right: -8px !important;
     }
 
-    
+    .transfer-modal .transfer-qr-container {
+        max-width: 160px;
+    }
 }
 
 /* ===== TOAST ===== */
@@ -1040,10 +1146,9 @@ header {
 
 .skeleton-grid {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 14px;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
     margin-top: 4px;
-    width: 100%;
 }
 
 .skeleton-item {
@@ -1201,7 +1306,7 @@ header {
 /* */
 
 
-/* ===== GLASS SYNC: DETAIL / UPLOAD / AUTH / TRANSFER ===== */
+/* ===== UNIFIED DETAIL BUTTONS ===== */
 
 .detail-actions {
     display: flex;
@@ -1210,409 +1315,85 @@ header {
     flex-wrap: nowrap;
 }
 
+.detail-actions .btn-transfer,
+.detail-actions .btn-edit,
+.detail-actions .btn-delete,
+.detail-actions .btn-close-detail {
+    flex: 1;
+    padding: 10px 8px;
+    border: 1px solid rgba(255, 255, 255, 0.55);
+    border-radius: 14px;
+    font-weight: 600;
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    white-space: nowrap;
+    text-align: center;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: none;
+}
 
+.detail-actions .btn-transfer {
+    background: rgba(59, 130, 246, 0.15);
+    color: #2563eb;
+    border-color: rgba(59, 130, 246, 0.25);
+}
 
-
-
-
+.detail-actions .btn-transfer:hover {
+    background: rgba(59, 130, 246, 0.28);
+    transform: translateY(-2px);
+}
 
 .detail-actions .btn-edit {
-    background: rgba(255, 255, 255, 0.45) !important;
-    color: #d97706 !important;
+    background: rgba(245, 158, 11, 0.15);
+    color: #d97706;
+    border-color: rgba(245, 158, 11, 0.25);
 }
 
 .detail-actions .btn-edit:hover {
-    background: rgba(255, 255, 255, 0.75) !important;
+    background: rgba(245, 158, 11, 0.28);
     transform: translateY(-2px);
 }
 
 .detail-actions .btn-delete {
-    background: rgba(255, 255, 255, 0.45) !important;
-    color: #dc2626 !important;
+    background: rgba(239, 68, 68, 0.12);
+    color: #dc2626;
+    border-color: rgba(239, 68, 68, 0.22);
 }
 
 .detail-actions .btn-delete:hover {
-    background: rgba(255, 255, 255, 0.75) !important;
+    background: rgba(239, 68, 68, 0.25);
     transform: translateY(-2px);
 }
 
 .detail-actions .btn-close-detail {
-    background: rgba(255, 255, 255, 0.35) !important;
-    color: #475569 !important;
+    background: rgba(100, 116, 139, 0.1);
+    color: #475569;
+    border-color: rgba(100, 116, 139, 0.2);
 }
 
 .detail-actions .btn-close-detail:hover {
-    background: rgba(255, 255, 255, 0.65) !important;
+    background: rgba(100, 116, 139, 0.2);
     transform: translateY(-2px);
 }
 
 .detail-modal .btn-copy {
-    background: rgba(255, 255, 255, 0.5) !important;
-    border: 1px solid rgba(255, 255, 255, 0.65) !important;
-    padding: 4px 12px !important;
-    border-radius: 50px !important;
-    font-size: 0.65rem !important;
-    font-weight: 600 !important;
-    color: #2563eb !important;
+    background: rgba(59, 130, 246, 0.12);
+    border: 1px solid rgba(59, 130, 246, 0.2);
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 0.65rem;
+    font-weight: 600;
+    color: #2563eb;
     cursor: pointer;
-    backdrop-filter: blur(10px);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7) !important;
+    transition: all 0.2s;
+    white-space: nowrap;
+    flex-shrink: 0;
+    box-shadow: none;
 }
 
 .detail-modal .btn-copy:hover {
-    background: rgba(255, 255, 255, 0.8) !important;
-}
-
-.detail-modal .qr-image-container {
-    background: rgba(255, 255, 255, 0.4) !important;
-    backdrop-filter: blur(12px);
-    border-radius: 18px !important;
-    border: 1px solid rgba(255, 255, 255, 0.55) !important;
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
-}
-
-/* Upload modal glass */
-.upload-modal {
-    background: rgba(255, 255, 255, 0.82) !important;
-    backdrop-filter: blur(24px) saturate(160%) !important;
-    -webkit-backdrop-filter: blur(24px) saturate(160%) !important;
-    border: 1px solid rgba(255, 255, 255, 0.65) !important;
-    border-radius: 24px !important;
-}
-
-.upload-modal .form-group input,
-.upload-modal .form-group select {
-    background: rgba(255, 255, 255, 0.45) !important;
-    border: 1px solid rgba(255, 255, 255, 0.6) !important;
-    border-radius: 14px !important;
-    backdrop-filter: blur(8px);
-}
-
-.upload-modal .form-group input:focus,
-.upload-modal .form-group select:focus {
-    background: rgba(255, 255, 255, 0.7) !important;
-    border-color: rgba(255, 255, 255, 0.85) !important;
-}
-
-.upload-modal .btn-submit,
-.btn-submit {
-    background: rgba(15, 23, 42, 0.75) !important;
-    backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.2) !important;
-    border-radius: 50px !important;
-    box-shadow: 0 6px 20px rgba(15, 23, 42, 0.15) !important;
-}
-
-.upload-modal .btn-submit:hover,
-.btn-submit:hover {
-    background: rgba(15, 23, 42, 0.9) !important;
-    transform: translateY(-1px);
-}
-
-.upload-image-box {
-    background: rgba(255, 255, 255, 0.35) !important;
-    border: 2px dashed rgba(255, 255, 255, 0.55) !important;
-    border-radius: 18px !important;
-    backdrop-filter: blur(8px);
-}
-
-.upload-image-box:hover {
-    background: rgba(255, 255, 255, 0.5) !important;
-    border-color: rgba(255, 255, 255, 0.75) !important;
-}
-
-.preview-container {
-    background: rgba(255, 255, 255, 0.4) !important;
-    border: 1px solid rgba(255, 255, 255, 0.6) !important;
-    border-radius: 18px !important;
-    backdrop-filter: blur(10px);
-}
-
-/* Auth modal glass */
-.auth-modal {
-    background: rgba(255, 255, 255, 0.82) !important;
-    backdrop-filter: blur(24px) saturate(160%) !important;
-    border: 1px solid rgba(255, 255, 255, 0.65) !important;
-    border-radius: 24px !important;
-}
-
-.auth-modal .auth-form .form-group input {
-    background: rgba(255, 255, 255, 0.45) !important;
-    border: 1px solid rgba(255, 255, 255, 0.6) !important;
-    border-radius: 14px !important;
-}
-
-.auth-modal .auth-form .form-group input:focus {
-    background: rgba(255, 255, 255, 0.7) !important;
-}
-
-
-
-/* QR preview nền tối */
-.detail-modal .qr-image-container {
-    background: #dcfce7 !important;
-    border: 1px solid rgba(160, 158, 158, 0.1) !important;
-}
-.detail-modal .qr-image-container img {
-    background: #ffffff;
-    border-radius: 8px;
-    padding: 8px;
-}
-
-
-
-
-
-/* ===== MOBILE FIXED LAYOUT ===== */
-html {
-    -webkit-text-size-adjust: 100%;
-    text-size-adjust: 100%;
-}
-
-body {
-    overflow-x: hidden;
-    width: 100%;
-    max-width: 100vw;
-}
-
-@media (max-width: 650px) {
-    .container {
-        max-width: 100% !important;
-        width: 100% !important;
-        padding-left: 12px !important;
-        padding-right: 12px !important;
-        box-sizing: border-box;
-    }
-
-    header .container {
-        padding-left: 12px !important;
-        padding-right: 12px !important;
-    }
-
-    .logo h1 {
-        font-size: 1.05rem !important;
-        max-width: 55vw;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-    }
-
-    .user-list {
-        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-        gap: 10px !important;
-        width: 100%;
-        box-sizing: border-box;
-    }
-
-    .user-item {
-        min-width: 0 !important;
-        width: 100% !important;
-        box-sizing: border-box;
-    }
-
-    .modal {
-        padding: 10px !important;
-        align-items: flex-end;
-    }
-
-    .modal-content,
-    .detail-modal,
-    .upload-modal,
-    .edit-modal,
-    .auth-modal {
-        width: 100% !important;
-        max-width: 100% !important;
-        max-height: 92vh;
-        overflow-y: auto;
-        -webkit-overflow-scrolling: touch;
-        box-sizing: border-box;
-        border-radius: 20px !important;
-    }
-
-    .search-box {
-        width: 100%;
-        box-sizing: border-box;
-    }
-
-    .btn-upload {
-        font-size: 0.75rem;
-        padding: 8px 14px;
-    }
-}
-
-
-/* =========================================================
-   FIX: select ngân hàng + nút detail + nền QR tối
-   ========================================================= */
-
-/* --- Select wrapper: mũi tên căn giữa --- */
-.select-wrapper {
-    position: relative;
-    width: 100%;
-    display: block;
-}
-
-.select-wrapper select,
-.upload-modal .form-group select,
-.edit-modal select,
-#qrBank,
-#editBank {
-    width: 100% !important;
-    box-sizing: border-box !important;
-    appearance: none !important;
-    -webkit-appearance: none !important;
-    -moz-appearance: none !important;
-    padding: 10px 40px 10px 14px !important;
-    background-color: rgba(255, 255, 255, 0.55) !important;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%2364748b' d='M1.41 0.59L6 5.17 10.59 0.59 12 2l-6 6-6-6z'/%3E%3C/svg%3E") !important;
-    background-repeat: no-repeat !important;
-    background-position: right 14px center !important;
-    background-size: 12px 8px !important;
-    border: 1px solid rgba(255, 255, 255, 0.65) !important;
-    border-radius: 14px !important;
-    font-size: 0.85rem !important;
-    color: #1e293b !important;
-    outline: none !important;
-    min-height: 42px;
-    line-height: 1.4;
-    cursor: pointer;
-}
-
-.select-wrapper select:focus,
-.upload-modal .form-group select:focus,
-#qrBank:focus {
-    background-color: rgba(255, 255, 255, 0.75) !important;
-    border-color: rgba(148, 163, 184, 0.8) !important;
-}
-
-/* Ẩn mũi tên native IE/Edge cũ */
-.select-wrapper select::-ms-expand {
-    display: none;
-}
-
-/* --- Nút Chi tiết: glass đồng bộ --- */
-.detail-actions {
-    display: flex !important;
-    flex-wrap: wrap !important;
-    gap: 8px !important;
-    margin-top: 16px !important;
-    width: 100%;
-}
-
-.detail-actions .btn-edit,
-.detail-actions .btn-delete,
-.detail-actions .btn-close-detail {
-    flex: 1 1 auto !important;
-    min-width: 0 !important;
-    padding: 11px 12px !important;
-    border-radius: 50px !important;
-    border: 1px solid rgba(255, 255, 255, 0.55) !important;
-    font-weight: 600 !important;
-    font-size: 0.8rem !important;
-    font-family: inherit !important;
-    cursor: pointer !important;
-    text-align: center !important;
-    line-height: 1.3 !important;
-    backdrop-filter: blur(14px) saturate(160%);
-    -webkit-backdrop-filter: blur(14px) saturate(160%);
-    box-shadow:
-        0 4px 14px rgba(31, 38, 135, 0.08),
-        inset 0 1px 0 rgba(255, 255, 255, 0.65) !important;
-    transition: background 0.2s ease, transform 0.2s ease !important;
-    -webkit-appearance: none !important;
-    appearance: none !important;
-}
-
-.detail-actions .btn-edit {
-    background: rgba(255, 251, 235, 0.75) !important;
-    color: #b45309 !important;
-}
-.detail-actions .btn-edit:hover {
-    background: rgba(254, 243, 199, 0.95) !important;
-    transform: translateY(-1px);
-}
-
-.detail-actions .btn-delete {
-    background: rgba(254, 242, 242, 0.75) !important;
-    color: #dc2626 !important;
-}
-.detail-actions .btn-delete:hover {
-    background: rgba(254, 226, 226, 0.95) !important;
-    transform: translateY(-1px);
-}
-
-.detail-actions .btn-close-detail {
-    background: rgba(241, 245, 249, 0.8) !important;
-    color: #475569 !important;
-}
-.detail-actions .btn-close-detail:hover {
-    background: rgba(226, 232, 240, 0.95) !important;
-    transform: translateY(-1px);
-}
-
-/* --- Nền tối vùng QR khi xem detail --- */
-.detail-modal .qr-image-container {
-    background: #0f172a !important;
-    border-radius: 18px !important;
-    padding: 18px !important;
-    margin: 0 0 14px 0 !important;
-    text-align: center !important;
-    border: 1px solid rgba(255, 255, 255, 0.08) !important;
-    box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.06),
-        0 8px 24px rgba(15, 23, 42, 0.25) !important;
-}
-
-.detail-modal .qr-image-container img {
-    max-width: 100% !important;
-    max-height: 240px !important;
-    width: auto !important;
-    height: auto !important;
-    border-radius: 10px !important;
-    display: block !important;
-    margin: 0 auto !important;
-    background: #ffffff !important;
-    padding: 10px !important;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35) !important;
-}
-
-@media (max-width: 650px) {
-    .detail-actions .btn-edit,
-    .detail-actions .btn-delete,
-    .detail-actions .btn-close-detail {
-        flex: 1 1 calc(33.33% - 8px) !important;
-        font-size: 0.75rem !important;
-        padding: 10px 6px !important;
-    }
-    .select-wrapper select,
-    #qrBank {
-        font-size: 16px !important; /* tránh zoom iOS */
-        min-height: 44px;
-    }
-}
-
-/* =========================================================
-   RESPONSIVE CSS GRID (một nguồn — tránh trùng rule)
-   ========================================================= */
-@media (max-width: 960px) {
-    .user-list,
-    .skeleton-grid {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 12px;
-    }
-}
-
-@media (max-width: 650px) {
-    .user-list,
-    .skeleton-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-        gap: 10px !important;
-    }
-}
-
-@media (max-width: 360px) {
-    .user-list,
-    .skeleton-grid {
-        grid-template-columns: minmax(0, 1fr) !important;
-    }
+    background: rgba(59, 130, 246, 0.22);
+    transform: scale(1.03);
 }

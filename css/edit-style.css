@@ -1,6 +1,54 @@
-/* ===== EDIT MODAL - GLASS STYLE ===== */
-
+/* ===== EDIT MODAL GLASS SYNC ===== */
 .modal-content.edit-modal,
+.edit-modal {
+    background: rgba(255, 255, 255, 0.85) !important;
+    backdrop-filter: blur(24px) saturate(160%) !important;
+    -webkit-backdrop-filter: blur(24px) saturate(160%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.65) !important;
+    border-radius: 24px !important;
+    box-shadow:
+        0 24px 60px rgba(31, 38, 135, 0.12),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8) !important;
+}
+
+.edit-modal .form-group input,
+.edit-modal .form-group select {
+    background: rgba(248, 250, 252, 0.7) !important;
+    border: 1px solid rgba(226, 232, 240, 0.8) !important;
+    border-radius: 12px !important;
+}
+
+.edit-modal .form-group input:focus,
+.edit-modal .form-group select:focus {
+    background: rgba(255, 255, 255, 0.95) !important;
+}
+
+.edit-modal .upload-image-box {
+    background: rgba(248, 250, 252, 0.55) !important;
+    border: 2px dashed rgba(148, 163, 184, 0.5) !important;
+    border-radius: 16px !important;
+}
+
+.edit-modal .preview-container {
+    background: rgba(248, 250, 252, 0.65) !important;
+    border-radius: 16px !important;
+}
+
+.edit-modal .btn-submit {
+    background: rgba(15, 23, 42, 0.9) !important;
+    border-radius: 14px !important;
+}
+
+.crop-controls {
+    background: rgba(248, 250, 252, 0.6) !important;
+    border: 1px solid rgba(226, 232, 240, 0.7) !important;
+    border-radius: 14px !important;
+}
+
+/* ======================================== */
+/* ===== EDIT QR - GLASS STYLE ===== */
+/* ======================================== */
+
 .edit-modal {
     background: rgba(255, 255, 255, 0.82) !important;
     backdrop-filter: blur(24px) saturate(160%) !important;
@@ -12,6 +60,60 @@
         inset 0 1px 0 rgba(255, 255, 255, 0.8) !important;
 }
 
+.edit-modal .form-group input,
+.edit-modal .form-group select {
+    background: rgba(248, 250, 252, 0.7) !important;
+    border: 1px solid rgba(226, 232, 240, 0.8) !important;
+    border-radius: 12px !important;
+}
+
+.edit-modal .form-group input:focus,
+.edit-modal .form-group select:focus {
+    background: rgba(255, 255, 255, 0.9) !important;
+    border-color: #cbd5e1 !important;
+}
+
+.edit-modal .upload-image-box {
+    background: rgba(248, 250, 252, 0.55) !important;
+    border: 2px dashed rgba(148, 163, 184, 0.5) !important;
+    border-radius: 16px !important;
+}
+
+.edit-modal .upload-image-box:hover {
+    background: rgba(241, 245, 249, 0.75) !important;
+}
+
+.edit-modal .preview-container {
+    background: rgba(248, 250, 252, 0.65) !important;
+    border: 2px solid rgba(34, 197, 94, 0.5) !important;
+    border-radius: 16px !important;
+}
+
+.edit-modal .btn-submit {
+    background: rgba(15, 23, 42, 0.9) !important;
+    border-radius: 14px !important;
+}
+
+.edit-modal .btn-submit:hover {
+    background: #1e293b !important;
+}
+
+.crop-controls {
+    background: rgba(248, 250, 252, 0.6) !important;
+    border: 1px solid rgba(226, 232, 240, 0.7) !important;
+    border-radius: 14px !important;
+}
+
+.crop-toolbar button {
+    background: rgba(255, 255, 255, 0.7) !important;
+    border-radius: 10px !important;
+}
+
+/* ======================================== */
+/* ===== EDIT QR - STYLES ===== */
+/* ======================================== */
+
+/* ===== EDIT MODAL FORM (giống upload modal) ===== */
 .edit-modal .form-group {
     margin-bottom: 14px;
 }
@@ -28,20 +130,24 @@
 .edit-modal .form-group select {
     width: 100%;
     padding: 10px 14px;
-    background: rgba(255, 255, 255, 0.45) !important;
-    border: 1px solid rgba(255, 255, 255, 0.6) !important;
-    border-radius: 14px !important;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
     font-size: 0.85rem;
     color: #1e293b;
     outline: none;
-    backdrop-filter: blur(8px);
-    transition: all 0.2s ease;
+    transition: border-color 0.2s ease;
 }
 
 .edit-modal .form-group input:focus,
 .edit-modal .form-group select:focus {
-    background: rgba(255, 255, 255, 0.7) !important;
-    border-color: rgba(255, 255, 255, 0.85) !important;
+    border-color: #cbd5e1;
+    background: #ffffff;
+}
+
+.edit-modal .form-group select option {
+    background: #ffffff;
+    color: #1e293b;
 }
 
 .edit-modal .form-group input.error,
@@ -57,29 +163,28 @@
 .edit-modal .btn-submit {
     width: 100%;
     padding: 12px;
-    background: rgba(15, 23, 42, 0.75) !important;
+    background: #0f172a;
     color: #ffffff;
-    border: 1px solid rgba(255, 255, 255, 0.2) !important;
-    border-radius: 50px !important;
+    border: none;
+    border-radius: 12px;
     font-size: 0.9rem;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.25s ease;
     margin-top: 4px;
-    backdrop-filter: blur(12px);
-    box-shadow: 0 6px 20px rgba(15, 23, 42, 0.15);
 }
 
 .edit-modal .btn-submit:hover {
-    background: rgba(15, 23, 42, 0.9) !important;
+    background: #1e293b;
     transform: translateY(-1px);
 }
 
+/* ===== UPLOAD IMAGE BOX (dùng chung style với thêm mới) ===== */
 .edit-modal .upload-image-box {
     position: relative;
-    background: rgba(255, 255, 255, 0.35) !important;
-    border: 2px dashed rgba(255, 255, 255, 0.55) !important;
-    border-radius: 18px !important;
+    background: #f8fafc;
+    border: 2px dashed #cbd5e1;
+    border-radius: 14px;
     padding: 28px 16px;
     text-align: center;
     cursor: pointer;
@@ -91,21 +196,48 @@
     align-items: center;
     justify-content: center;
     gap: 4px;
-    backdrop-filter: blur(8px);
+    box-sizing: border-box;
+    width: 100%;
+    margin: 0;
 }
 
 .edit-modal .upload-image-box:hover {
-    background: rgba(255, 255, 255, 0.5) !important;
-    border-color: rgba(255, 255, 255, 0.75) !important;
+    border-color: #94a3b8;
+    background: #f1f5f9;
+    transform: translateY(-2px);
 }
 
-.edit-modal .upload-image-box .upload-icon { font-size: 2.2rem; }
-.edit-modal .upload-image-box .upload-text { font-size: 0.85rem; font-weight: 500; color: #475569; }
-.edit-modal .upload-image-box .upload-hint { font-size: 0.65rem; color: #94a3b8; }
+.edit-modal .upload-image-box:active {
+    transform: scale(0.98);
+}
+
+.edit-modal .upload-image-box .upload-icon {
+    font-size: 2.2rem;
+    display: block;
+}
+
+.edit-modal .upload-image-box .upload-text {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: #475569;
+}
+
+.edit-modal .upload-image-box .upload-hint {
+    font-size: 0.65rem;
+    color: #94a3b8;
+}
+
 .edit-modal .upload-image-box input[type="file"] {
-    position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
 }
 
+/* ===== PREVIEW CONTAINER (1 phần duy nhất) ===== */
 .edit-modal .preview-container {
     position: relative !important;
     display: none;
@@ -114,71 +246,88 @@
     justify-content: center !important;
     margin: 0 auto !important;
     padding: 12px !important;
-    background: rgba(255, 255, 255, 0.4) !important;
-    border-radius: 18px !important;
-    border: 1px solid rgba(34, 197, 94, 0.45) !important;
+    background: #f8fafc !important;
+    border-radius: 14px !important;
+    border: 2px solid #22c55e !important;
     max-width: 220px !important;
     width: 100% !important;
     box-sizing: border-box !important;
-    backdrop-filter: blur(10px);
     animation: fadeIn 0.3s ease;
 }
 
-.edit-modal .preview-container.show { display: flex !important; }
+.edit-modal .preview-container.show {
+    display: flex !important;
+}
 
 .edit-modal .preview-container img {
     width: 100% !important;
     max-height: 200px !important;
-    border-radius: 10px !important;
+    border-radius: 8px !important;
     display: block !important;
     object-fit: contain !important;
+    margin: 0 auto !important;
 }
 
 .edit-modal .preview-container .preview-label {
     display: inline-block;
     margin-top: 8px;
     font-size: 0.7rem;
-    color: #16a34a;
-    background: rgba(220, 252, 231, 0.7);
+    color: #22c55e;
+    background: #dcfce7;
     padding: 4px 14px;
-    border-radius: 50px;
+    border-radius: 12px;
     font-weight: 500;
-    border: 1px solid rgba(134, 239, 172, 0.6);
+    border: 1px solid #86efac;
 }
 
+/* ===== NÚT XÓA ẢNH ===== */
 .edit-modal .preview-container .btn-remove-image {
     position: absolute !important;
-    top: -10px !important;
-    right: -10px !important;
-    width: 28px !important;
-    height: 28px !important;
+    top: -12px !important;
+    right: -12px !important;
+    width: 30px !important;
+    height: 30px !important;
     border-radius: 50% !important;
-    background: rgba(255, 255, 255, 0.85) !important;
+    background: #ffffff !important;
     color: #ef4444 !important;
-    border: 1px solid rgba(254, 202, 202, 0.8) !important;
-    font-size: 0.9rem !important;
+    border: 2px solid #fecaca !important;
+    font-size: 1rem !important;
     font-weight: 700 !important;
     cursor: pointer !important;
+    transition: all 0.25s ease !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2) !important;
     z-index: 10 !important;
-    backdrop-filter: blur(8px);
+    line-height: 1 !important;
+    padding: 0 !important;
 }
 
 .edit-modal .preview-container .btn-remove-image:hover {
     background: #ef4444 !important;
-    color: #fff !important;
+    color: #ffffff !important;
+    border-color: #ef4444 !important;
+    transform: scale(1.15) !important;
+    box-shadow: 0 6px 20px rgba(239, 68, 68, 0.3) !important;
 }
 
-.crop-wrapper { width: 100%; margin-top: 12px; animation: fadeIn 0.3s ease; }
+.edit-modal .preview-container .btn-remove-image:active {
+    transform: scale(0.9) !important;
+}
+
+/* ===== CROP WRAPPER ===== */
+.crop-wrapper {
+    width: 100%;
+    margin-top: 12px;
+    animation: fadeIn 0.3s ease;
+}
 
 .crop-controls {
-    background: rgba(255, 255, 255, 0.4) !important;
-    border-radius: 16px !important;
+    background: #f8fafc;
+    border-radius: 12px;
     padding: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.55) !important;
-    backdrop-filter: blur(10px);
+    border: 1px solid #e2e8f0;
 }
 
 .crop-toolbar {
@@ -191,79 +340,236 @@
 
 .crop-toolbar button {
     padding: 6px 14px;
-    border-radius: 50px !important;
-    border: 1px solid rgba(255, 255, 255, 0.55) !important;
-    background: rgba(255, 255, 255, 0.5) !important;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+    background: #ffffff;
     font-size: 0.75rem;
     font-weight: 500;
     color: #475569;
     cursor: pointer;
     transition: all 0.2s ease;
-    backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    gap: 4px;
 }
 
 .crop-toolbar button:hover {
-    background: rgba(255, 255, 255, 0.8) !important;
-    transform: translateY(-1px);
+    background: #e2e8f0;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
 }
 
-.btn-crop-reset { color: #ef4444 !important; }
+.crop-toolbar button:active {
+    transform: scale(0.95);
+}
+
+.btn-crop-reset {
+    color: #ef4444 !important;
+}
+
+.btn-crop-reset:hover {
+    background: #fee2e2 !important;
+}
 
 .crop-container-inner {
     background: #1e293b;
-    border-radius: 12px;
+    border-radius: 8px;
     overflow: hidden;
     max-height: 400px;
     margin-bottom: 10px;
 }
 
-.crop-container-inner img { max-width: 100%; display: block; }
+.crop-container-inner img {
+    max-width: 100%;
+    display: block;
+}
 
-.crop-actions { display: flex; gap: 8px; }
+.crop-actions {
+    display: flex;
+    gap: 8px;
+}
 
 .btn-crop-apply {
     flex: 1;
     padding: 10px;
-    background: rgba(79, 70, 229, 0.85) !important;
+    background: #4f46e5;
     color: white;
-    border: 1px solid rgba(255, 255, 255, 0.25) !important;
-    border-radius: 50px !important;
+    border: none;
+    border-radius: 8px;
     font-weight: 600;
     font-size: 0.85rem;
     cursor: pointer;
     transition: all 0.3s ease;
-    backdrop-filter: blur(10px);
 }
 
 .btn-crop-apply:hover {
-    background: rgba(67, 56, 202, 0.95) !important;
+    background: #4338ca;
     transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
 }
 
-/* Detail edit button - glass pill */
+.btn-crop-apply:active {
+    transform: scale(0.98);
+}
+
+/* ===== BUTTON EDIT (trong detail) ===== */
 .detail-actions .btn-edit {
-    background: rgba(255, 255, 255, 0.45) !important;
-    color: #d97706 !important;
-    border: 1px solid rgba(255, 255, 255, 0.6) !important;
-    border-radius: 50px !important;
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7) !important;
+    flex: 1;
+    padding: 8px 10px;
+    background: #fef3c7;
+    color: #d97706;
+    border: none;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    text-align: center;
 }
 
 .detail-actions .btn-edit:hover {
-    background: rgba(255, 255, 255, 0.75) !important;
-    transform: translateY(-2px) !important;
+    background: #fde68a;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(217, 119, 6, 0.2);
 }
 
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(-8px); }
-    to { opacity: 1; transform: translateY(0); }
+.detail-actions .btn-edit:active {
+    transform: scale(0.95);
 }
+
+/* ======================================== */
+/* ===== RESPONSIVE ===== */
+/* ======================================== */
 
 @media (max-width: 650px) {
-    .edit-modal .preview-container { max-width: 160px !important; }
-    .edit-modal .preview-container img { max-height: 150px !important; }
-    .crop-container-inner { max-height: 300px; }
-    .crop-toolbar button { padding: 5px 10px; font-size: 0.65rem; }
-    .edit-modal .upload-image-box { min-height: 90px; padding: 20px 12px; }
-    .btn-crop-apply { font-size: 0.75rem; padding: 8px; }
+    .edit-modal .preview-container {
+        max-width: 160px !important;
+    }
+    
+    .edit-modal .preview-container img {
+        max-height: 150px !important;
+    }
+    
+    .crop-container-inner {
+        max-height: 300px;
+    }
+    
+    .crop-toolbar {
+        gap: 4px;
+    }
+    
+    .crop-toolbar button {
+        padding: 5px 10px;
+        font-size: 0.65rem;
+    }
+    
+    .edit-modal .upload-image-box {
+        min-height: 90px;
+        padding: 20px 12px;
+    }
+    
+    .edit-modal .upload-image-box .upload-icon {
+        font-size: 1.8rem;
+    }
+    
+    .edit-modal .upload-image-box .upload-text {
+        font-size: 0.8rem;
+    }
+    
+    .edit-modal .upload-image-box .upload-hint {
+        font-size: 0.6rem;
+    }
+    
+    .detail-actions .btn-edit {
+        font-size: 0.65rem;
+        padding: 6px 8px;
+    }
+    
+    .edit-modal .preview-container .btn-remove-image {
+        width: 26px !important;
+        height: 26px !important;
+        font-size: 0.85rem !important;
+        top: -10px !important;
+        right: -10px !important;
+    }
+    
+    .btn-crop-apply {
+        font-size: 0.75rem;
+        padding: 8px;
+    }
+}
+
+/* ======================================== */
+/* ===== ANIMATIONS ===== */
+/* ======================================== */
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ======================================== */
+/* ===== DARK MODE SUPPORT ===== */
+/* ======================================== */
+
+@media (prefers-color-scheme: dark) {
+    .edit-modal .upload-image-box {
+        background: #1e293b;
+        border-color: #334155;
+    }
+    
+    .edit-modal .upload-image-box:hover {
+        background: #334155;
+        border-color: #475569;
+    }
+    
+    .edit-modal .upload-image-box .upload-text {
+        color: #94a3b8;
+    }
+    
+    .edit-modal .preview-container {
+        background: #1e293b !important;
+        border-color: #22c55e !important;
+    }
+    
+    .crop-controls {
+        background: #1e293b;
+        border-color: #334155;
+    }
+    
+    .crop-toolbar button {
+        background: #334155;
+        color: #e2e8f0;
+        border-color: #475569;
+    }
+    
+    .crop-toolbar button:hover {
+        background: #475569;
+    }
+    
+    .edit-modal .preview-container .preview-label {
+        background: #064e3b;
+        color: #86efac;
+        border-color: #22c55e;
+    }
+    
+    .edit-modal .form-group input,
+    .edit-modal .form-group select {
+        background: #1e293b;
+        border-color: #334155;
+        color: #e2e8f0;
+    }
+    
+    .edit-modal .form-group input:focus,
+    .edit-modal .form-group select:focus {
+        background: #0f172a;
+        border-color: #475569;
+    }
 }
