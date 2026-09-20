@@ -4,7 +4,14 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>QR chuyển khoản</title>
+    <title>QR Manage</title>
+
+    <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="icons/favicon-16.png" />
+    <link rel="icon" type="image/x-icon" href="icons/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png" />
+
     <link rel="stylesheet" href="css/style.css" />
       <!-- ===== CSS CHỈNH SỬA QR (THÊM MỚI) ===== -->
     <link rel="stylesheet" href="css/edit-style.css" />
@@ -175,31 +182,6 @@
         <div class="modal-content auth-modal" id="authFormContainer"></div>
     </div>
 
-    <!-- ===== MODAL TRANSFER (DONATE) ===== -->
-    <div class="modal transfer-modal" id="transferModal">
-        <div class="modal-content">
-            <span class="modal-close" id="transferModalClose">&times;</span>
-            <h2 class="modal-title" style="text-align:center; font-size:1.5rem;">Donate thì làm</h2>
-            <p style="text-align:center; color:#64748b; margin-bottom:16px; font-size:0.9rem;">Quét mã QR hoặc chuyển
-                khoản theo thông tin bên dưới</p>
-
-            <!-- QR Code -->
-            <div class="transfer-qr-container">
-                <img id="transferQRImage" src="" alt="QR Code" />
-            </div>
-
-            <!-- Thông tin chuyển khoản -->
-            <div id="transferInfo">
-                <!-- Thông tin sẽ được JS điền -->
-            </div>
-
-            <div class="transfer-actions">
-                <button class="btn-copy-all" onclick="copyAllTransferInfo()"> Sao chép tất cả</button>
-                <button class="btn-close-detail" onclick="closeTransfer()">Đóng</button>
-            </div>
-        </div>
-    </div>
-
     <!-- ===== FILE INPUT HIDDEN ===== -->
     <input type="file" id="fileInput" accept="image/*" style="display:none;" />
 <!-- ===== MODAL CHỈNH SỬA ===== -->
@@ -213,9 +195,17 @@
 <script src="js/validate/validate_bankName.js"></script>
 <script src="js/validate/validate_QRImage_Required.js"></script>
 <script src="js/validate/validate_searchName.js"></script>
-    <script src="js/script.js"></script>
-  
-    
+<script src="js/script.js"></script>
+
+    <!-- PAGE MASCOT: luôn góc phải dưới -->
+    <div id="pageMascot" class="page-mascot-float"
+         data-directions="mascots/fox-directions.webp"
+         data-reactions="mascots/fox-reactions.webp"
+         data-size="110"
+         data-label="fox"
+         title="Giữ kéo để di chuyển · Click: biểu cảm · Double-click: đổi mascot"></div>
+    <script src="js/page-mascot.js"></script>
+
 </body>
 
 </html>

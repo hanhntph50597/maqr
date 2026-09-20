@@ -829,127 +829,6 @@ header {
     border-color: #22c55e !important;
 }
 
-/* ===== TRANSFER MODAL (DONATE) ===== */
-.transfer-modal .modal-title {
-    font-size: 1.5rem;
-    font-weight: 700;
-    margin-bottom: 4px;
-    color: #1e293b;
-    text-align: center;
-}
-
-.transfer-modal .transfer-qr-container {
-    background: #ffffff;
-    border-radius: 14px;
-    padding: 12px;
-    margin: 0 auto 14px auto;
-    text-align: center;
-    border: 2px solid #e2e8f0;
-    max-width: 220px;
-}
-
-.transfer-modal .transfer-qr-container img {
-    max-width: 100%;
-    max-height: 200px;
-    border-radius: 8px;
-    display: block;
-    margin: 0 auto;
-}
-
-.transfer-modal #transferInfo {
-    background: #f8fafc;
-    border-radius: 10px;
-    padding: 14px 16px;
-    margin-bottom: 16px;
-    border: 1px solid #e2e8f0;
-}
-
-.transfer-modal #transferInfo .info-row {
-    display: flex;
-    justify-content: space-between;
-    padding: 6px 0;
-    font-size: 0.85rem;
-    border-bottom: 1px solid #f1f5f9;
-}
-
-.transfer-modal #transferInfo .info-row:last-child {
-    border-bottom: none;
-}
-
-.transfer-modal #transferInfo .info-row .label {
-    color: #64748b;
-    font-weight: 500;
-}
-
-.transfer-modal #transferInfo .info-row .value {
-    color: #1e293b;
-    font-weight: 600;
-    text-align: right;
-    word-break: break-all;
-}
-
-.transfer-modal .transfer-actions {
-    display: flex;
-    gap: 8px;
-    margin-top: 4px;
-}
-
-.transfer-modal .btn-copy-all {
-    flex: 2;
-    padding: 10px;
-    background: #dbeafe;
-    color: #2563eb;
-    border: none;
-    border-radius: 10px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.transfer-modal .btn-copy-all:hover {
-    background: #bfdbfe;
-    transform: translateY(-2px);
-}
-
-.transfer-modal .btn-close-detail {
-    flex: 1;
-    padding: 10px;
-    background: #f1f5f9;
-    color: #475569;
-    border: none;
-    border-radius: 10px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.transfer-modal .btn-close-detail:hover {
-    background: #e2e8f0;
-    transform: translateY(-2px);
-}
-
-/* ===== NÚT COPY TRONG TRANSFER MODAL ===== */
-.btn-copy-transfer {
-    background: #dbeafe;
-    border: none;
-    padding: 2px 10px;
-    border-radius: 12px;
-    font-size: 0.6rem;
-    font-weight: 600;
-    color: #2563eb;
-    cursor: pointer;
-    transition: all 0.2s;
-    white-space: nowrap;
-    margin-left: 6px;
-}
-
-.btn-copy-transfer:hover {
-    background: #bfdbfe;
-    transform: scale(1.03);
-}
-
 /* ===== RESPONSIVE ===== */
 @media (max-width: 650px) {
     .container {
@@ -1334,16 +1213,7 @@ header {
     box-shadow: none;
 }
 
-.detail-actions .btn-transfer {
-    background: rgba(59, 130, 246, 0.15);
-    color: #2563eb;
-    border-color: rgba(59, 130, 246, 0.25);
-}
 
-.detail-actions .btn-transfer:hover {
-    background: rgba(59, 130, 246, 0.28);
-    transform: translateY(-2px);
-}
 
 .detail-actions .btn-edit {
     background: rgba(245, 158, 11, 0.15);
@@ -1396,4 +1266,219 @@ header {
 .detail-modal .btn-copy:hover {
     background: rgba(59, 130, 246, 0.22);
     transform: scale(1.03);
+}
+
+
+/* =========================================================
+   NEUMORPHISM — palette pastel indigo-rose (cân & đẹp hơn)
+   ========================================================= */
+:root {
+  --neo-bg: #ebe4f5;
+  --neo-bg2: #f5e6f0;
+  --neo-surface: #f3eef9;
+  --neo-text: #2a2340;
+  --neo-muted: #6b6280;
+  --neo-accent: #7c5cbf;
+  --neo-accent-hover: #6a4aad;
+  --neo-accent-2: #e86b9a;
+  --neo-shadow-dark: #d4c8e6;
+  --neo-shadow-light: #ffffff;
+  --neo-radius: 22px;
+  --neo-pill: 999px;
+}
+
+html, body {
+  background: linear-gradient(145deg, var(--neo-bg) 0%, #e8e0f4 40%, var(--neo-bg2) 100%) !important;
+  background-attachment: fixed !important;
+  color: var(--neo-text) !important;
+}
+
+.container {
+  max-width: 1020px !important;
+  width: 100% !important;
+  padding-left: 20px !important;
+  padding-right: 20px !important;
+}
+
+header {
+  background: rgba(243, 238, 249, 0.92) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  border-bottom: none !important;
+  box-shadow: 0 6px 20px rgba(80, 60, 120, 0.06) !important;
+}
+
+.logo h1 {
+  color: var(--neo-text) !important;
+  font-size: 1.35rem !important;
+}
+
+.btn-manage, .user-name {
+  background: var(--neo-surface) !important;
+  color: var(--neo-text) !important;
+  border: none !important;
+  border-radius: var(--neo-pill) !important;
+  box-shadow: 5px 5px 12px var(--neo-shadow-dark), -5px -5px 12px var(--neo-shadow-light) !important;
+  backdrop-filter: none !important;
+}
+
+.btn-logout {
+  background: var(--neo-surface) !important;
+  color: #d9466a !important;
+  border: none !important;
+  border-radius: var(--neo-pill) !important;
+  box-shadow: 4px 4px 10px var(--neo-shadow-dark), -4px -4px 10px var(--neo-shadow-light) !important;
+  backdrop-filter: none !important;
+}
+
+.search-box {
+  background: var(--neo-surface) !important;
+  border: none !important;
+  border-radius: var(--neo-pill) !important;
+  box-shadow: inset 5px 5px 11px var(--neo-shadow-dark), inset -5px -5px 11px var(--neo-shadow-light) !important;
+  backdrop-filter: none !important;
+}
+
+.btn-upload, .btn-submit, .upload-modal .btn-submit, .edit-modal .btn-submit {
+  background: linear-gradient(135deg, var(--neo-accent) 0%, #9b6dd4 100%) !important;
+  color: #fff !important;
+  border: none !important;
+  border-radius: var(--neo-pill) !important;
+  box-shadow: 6px 6px 16px rgba(124, 92, 191, 0.35) !important;
+}
+
+.btn-upload:hover, .btn-submit:hover {
+  background: linear-gradient(135deg, var(--neo-accent-hover) 0%, var(--neo-accent) 100%) !important;
+}
+
+.user-list {
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  gap: 16px !important;
+}
+
+.user-item {
+  background: var(--neo-surface) !important;
+  border: none !important;
+  border-radius: var(--neo-radius) !important;
+  box-shadow: 9px 9px 20px var(--neo-shadow-dark), -9px -9px 20px var(--neo-shadow-light) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  min-height: 158px !important;
+}
+
+.user-item:hover {
+  transform: translateY(-4px) !important;
+  box-shadow: 12px 12px 26px var(--neo-shadow-dark), -8px -8px 18px var(--neo-shadow-light) !important;
+}
+
+.modal {
+  background: rgba(80, 60, 110, 0.28) !important;
+}
+
+.modal-content, .detail-modal, .upload-modal, .edit-modal, .auth-modal {
+  background: var(--neo-surface) !important;
+  border: none !important;
+  border-radius: 28px !important;
+  box-shadow: 16px 16px 36px rgba(90, 70, 130, 0.18), -12px -12px 28px rgba(255,255,255,0.7) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+.auth-modal .auth-form .form-group input,
+.upload-modal .form-group input,
+.upload-modal .form-group select,
+.edit-modal .form-group input,
+.edit-modal .form-group select {
+  background: var(--neo-surface) !important;
+  border: none !important;
+  border-radius: 14px !important;
+  box-shadow: inset 4px 4px 9px var(--neo-shadow-dark), inset -4px -4px 9px var(--neo-shadow-light) !important;
+}
+
+.upload-image-box {
+  background: var(--neo-surface) !important;
+  border: none !important;
+  border-radius: 18px !important;
+  box-shadow: inset 5px 5px 11px var(--neo-shadow-dark), inset -5px -5px 11px var(--neo-shadow-light) !important;
+}
+
+.detail-modal .qr-image-container {
+  background: #2a2340 !important;
+  border-radius: 18px !important;
+  border: none !important;
+  padding: 16px !important;
+}
+
+.detail-actions .btn-edit,
+.detail-actions .btn-delete,
+.detail-actions .btn-close-detail {
+  border: none !important;
+  border-radius: 14px !important;
+  background: var(--neo-surface) !important;
+  box-shadow: 4px 4px 10px var(--neo-shadow-dark), -4px -4px 10px var(--neo-shadow-light) !important;
+  backdrop-filter: none !important;
+}
+
+.auth-modal .auth-form .switch-text a {
+  color: var(--neo-accent) !important;
+}
+
+/* MASCOT — luôn trên modal, kéo được */
+#pageMascot.page-mascot-float,
+.page-mascot-float {
+  position: fixed !important;
+  right: 16px !important;
+  bottom: 20px !important;
+  z-index: 2000 !important; /* cao hơn modal 1000 */
+  width: 110px !important;
+  height: 110px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  line-height: 0 !important;
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  filter: drop-shadow(4px 10px 16px rgba(60, 40, 100, 0.22));
+  touch-action: none;
+  user-select: none;
+}
+
+.page-mascot-float.is-dragging {
+  filter: drop-shadow(6px 14px 22px rgba(60, 40, 100, 0.35));
+  opacity: 0.95 !important;
+}
+
+.page-mascot-float .page-mascot {
+  width: 110px !important;
+  height: 110px !important;
+  display: block !important;
+  cursor: grab !important;
+}
+
+.page-mascot-float .page-mascot:active {
+  cursor: grabbing !important;
+}
+
+@media (max-width: 900px) {
+  .user-list { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; }
+}
+@media (max-width: 650px) {
+  .container { padding-left: 14px !important; padding-right: 14px !important; }
+  .user-list { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 12px !important; }
+  .logo h1 { font-size: 1.08rem !important; }
+  #pageMascot.page-mascot-float,
+  .page-mascot-float {
+    width: 80px !important;
+    height: 80px !important;
+    right: 10px !important;
+    bottom: 14px !important;
+  }
+  .page-mascot-float .page-mascot {
+    width: 80px !important;
+    height: 80px !important;
+  }
+}
+@media (max-width: 360px) {
+  .user-list { grid-template-columns: 1fr !important; }
 }

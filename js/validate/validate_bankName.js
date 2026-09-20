@@ -1,31 +1,22 @@
-function validateBankName(showRequired = false) {
-    console.log("validateBankName", showRequired);
-    const value = qrBankSelect.value.trim();
-
+function validateBankName(showRequired) {
+    if (typeof showRequired === 'undefined') showRequired = false;
+    var select = document.getElementById('qrBank') || (typeof qrBankSelect !== 'undefined' ? qrBankSelect : null);
+    var errorEl = document.getElementById('qrBankError') || (typeof qrBankSelectError !== 'undefined' ? qrBankSelectError : null);
+    if (!select) return false;
+    var value = (select.value || '').trim();
     if (!value) {
-        qrBankSelect.classList.remove('success');
-        qrBankSelect.classList.add('error');
-
-        if (showRequired) {
-            qrBankSelectError.textContent = 'Vui lòng chọn ngân hàng!';
-            qrBankSelectError.classList.add('show');
-        } else {
-            qrBankSelectError.classList.remove('show');
+        select.classList.remove('success');
+        select.classList.add('error');
+        if (errorEl) {
+            if (showRequired) {
+                errorEl.textContent = 'Vui lòng chọn ngân hàng!';
+                errorEl.classList.add('show');
+            } else errorEl.classList.remove('show');
         }
-
         return false;
     }
-
-    if (!validateName(value)) {
-        qrBankSelect.classList.remove('success');
-        qrBankSelect.classList.add('error');
-        qrBankSelectError.textContent = 'Chỉ được chứa chữ cái (có dấu) và khoảng trắng!';
-        qrBankSelectError.classList.add('show');
-        return false;
-    }
-
-    qrBankSelect.classList.remove('error');
-    qrBankSelect.classList.add('success');
-    qrBankSelectError.classList.remove('show');
+    select.classList.remove('error');
+    select.classList.add('success');
+    if (errorEl) errorEl.classList.remove('show');
     return true;
 }
