@@ -3,18 +3,19 @@
 
 <head>
     <meta charset="UTF-8" />
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>QR Manage</title>
-
-    <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png" />
+<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="icons/favicon-16.png" />
     <link rel="icon" type="image/x-icon" href="icons/favicon.ico" />
     <link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.png" />
     <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png" />
 
-    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/style.css?v=v7-74078" />
       <!-- ===== CSS CHỈNH SỬA QR (THÊM MỚI) ===== -->
-    <link rel="stylesheet" href="css/edit-style.css" />
+    <link rel="stylesheet" href="css/edit-style.css?v=v7-74078" />
     <!-- ===== FIREBASE SDK ===== -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
@@ -23,7 +24,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"></script>
 
     <!-- ===== FIREBASE CONFIG ===== -->
-    <script src="database/firebase-config.js"></script>
+    <script src="database/firebase-config.js?v=v7-74078"></script>
 </head>
 
 <script src="https://unpkg.com/@zxing/library@latest"></script> <!-- ===== thư viện zXing để đọc QR từ hình ảnh ===== -->
@@ -190,12 +191,12 @@
         <!-- Nội dung sẽ được JS tạo -->
     </div>
 </div>
-<script src="js/edit-qr.js"></script>
-<script src="js/validate/validate_qrName.js"></script>
-<script src="js/validate/validate_bankName.js"></script>
-<script src="js/validate/validate_QRImage_Required.js"></script>
-<script src="js/validate/validate_searchName.js"></script>
-<script src="js/script.js"></script>
+<script src="js/edit-qr.js?v=v7-74078"></script>
+<script src="js/validate/validate_qrName.js?v=v7-74078"></script>
+<script src="js/validate/validate_bankName.js?v=v7-74078"></script>
+<script src="js/validate/validate_QRImage_Required.js?v=v7-74078"></script>
+<script src="js/validate/validate_searchName.js?v=v7-74078"></script>
+<script src="js/script.js?v=v7-74078"></script>
 
     <!-- PAGE MASCOT: luôn góc phải dưới -->
     <div id="pageMascot" class="page-mascot-float"
@@ -204,8 +205,8 @@
          data-size="110"
          data-label="fox"
          title="Giữ kéo để di chuyển · Click: biểu cảm · Double-click: đổi mascot"></div>
-    <script src="js/page-mascot.js"></script>
-
+    <script src="js/page-mascot.js?v=v7-74078"></script>
+    <script src="js/pwa.js"></script>
 </body>
 
 </html>

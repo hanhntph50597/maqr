@@ -515,6 +515,12 @@ async function handleEditSubmit() {
     }
     
     // Chuẩn bị dữ liệu cập nhật
+    let imageData = editCurrentImageData;
+    if (imageData && typeof compressImageDataUrl === 'function') {
+        try {
+            imageData = await compressImageDataUrl(imageData, { maxSide: 700, quality: 0.82 });
+        } catch (e) {}
+    }
     const updateData = {
         name: name,
         bank: bank,
@@ -522,7 +528,7 @@ async function handleEditSubmit() {
         accountHolder: holder || 'Chưa cập nhật',
         uploadedBy: currentUser,
         updatedAt: new Date().toISOString(),
-        imageData: editCurrentImageData
+        imageData: imageData
     };
     
     await saveEdit(updateData);

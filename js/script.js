@@ -5,7 +5,7 @@
 const DB_USERS = 'users';
 const DB_QRS = 'qrCodes';
 
-// ===== CACHE QR (tìm kiếm tức thì, không gọi Firebase mỗi lần gõ) =====
+// ===== QR list (không cache localStorage) =====
 let qrCache = null;
 let renderListSeq = 0;
 
@@ -58,12 +58,10 @@ function hashPassword(password) {
     return 'hashed_' + hash;
 }
 
-// ===== KIỂM TRA ADMIN =====
 function isAdmin() {
     return currentUser === ADMIN_USER;
 }
 
-// ===== ĐĂNG KÝ =====
 async function registerUser(username, password) {
     if (username.length < 3) {
         return { success: false, message: 'Tên phải có ít nhất 3 ký tự!' };
@@ -71,13 +69,11 @@ async function registerUser(username, password) {
     if (password.length < 4) {
         return { success: false, message: 'Mật khẩu phải có ít nhất 4 ký tự!' };
     }
-
     try {
         const snapshot = await database.ref(`${DB_USERS}/${username}`).once('value');
         if (snapshot.exists()) {
             return { success: false, message: 'Tên đăng nhập đã tồn tại!' };
         }
-
         await database.ref(`${DB_USERS}/${username}`).set({
             password: hashPassword(password)
         });
@@ -88,26 +84,21 @@ async function registerUser(username, password) {
     }
 }
 
-// ===== ĐĂNG NHẬP =====
 async function loginUser(username, password) {
-    // Kiểm tra tài khoản admin
     if (username === ADMIN_USER && password === ADMIN_PASS) {
         currentUser = ADMIN_USER;
         localStorage.setItem('qr_current_user', ADMIN_USER);
         return { success: true, message: 'Đăng nhập thành công (Admin)!' };
     }
-
     try {
         const snapshot = await database.ref(`${DB_USERS}/${username}`).once('value');
         if (!snapshot.exists()) {
             return { success: false, message: 'Tên đăng nhập không tồn tại!' };
         }
-
         const user = snapshot.val();
         if (user.password !== hashPassword(password)) {
             return { success: false, message: 'Mật khẩu không đúng!' };
         }
-
         currentUser = username;
         localStorage.setItem('qr_current_user', username);
         return { success: true, message: 'Đăng nhập thành công!' };
@@ -121,96 +112,7 @@ function logoutUser() {
     currentUser = null;
     localStorage.removeItem('qr_current_user');
 }
-// ==========================================
-// ===== LOADING =====
-// ==========================================
 
-const loadingOverlay = document.getElementById('loadingOverlay');
-
-// Hàm ẩn loading
-function hideLoading() {
-    if (loadingOverlay) {
-        loadingOverlay.classList.add('hidden');
-        setTimeout(() => {
-            loadingOverlay.style.display = 'none';
-        }, 500);
-    }
-}
-
-// Hàm hiển thị skeleton khi đang tải dữ liệu
-function showSkeleton() {
-    const userList = document.getElementById('userList');
-    if (userList) {
-        userList.innerHTML = `
-            <div class="skeleton-grid">
-                ${Array(6).fill(`
-                    <div class="skeleton-item">
-                        <div class="skeleton-avatar"></div>
-                        <div class="skeleton-line"></div>
-                        <div class="skeleton-line short"></div>
-                    </div>
-                `).join('')}
-            </div>
-        `;
-    }
-}
-
-// renderUserList: xem hàm chính bên dưới
-
-// ===== CẬP NHẬT HÀM UPDATE UI =====
-function updateUI() {
-    // Hiển thị loading khi đang kiểm tra session
-    if (!currentUser) {
-        // Hiển thị skeleton ngay khi chưa đăng nhập
-        showSkeleton();
-    }
-
-    if (currentUser) {
-        authSection.style.display = 'none';
-        userSection.style.display = 'flex';
-        const displayName = isAdmin() ? currentUser + ' (Admin)' : currentUser;
-        usernameDisplay.textContent = displayName;
-        uploadArea.style.display = 'block';
-    } else {
-        authSection.style.display = 'block';
-        userSection.style.display = 'none';
-        uploadArea.style.display = 'none';
-    }
-    renderUserList(searchInput.value);
-}
-
-// ===== KHỞI CHẠY - ẨN LOADING SAU KHI TẢI XONG =====
-checkSession();
-
-// Hiển thị loading ngay khi vào trang
-if (loadingOverlay) {
-    loadingOverlay.style.display = 'flex';
-}
-
-// Ẩn loading sau khi tải xong (tối đa 3 giây)
-Promise.all([
-    // Đợi dữ liệu được tải
-    getQRList(),
-    // Hoặc timeout sau 2.5 giây
-    new Promise(resolve => setTimeout(resolve, 2500))
-]).then(() => {
-    hideLoading();
-}).catch(() => {
-    hideLoading();
-});
-
-// Gọi updateUI sau khi loading
-setTimeout(() => {
-    updateUI();
-}, 100);
-
-console.log('QR Bank Storage - Firebase đã sẵn sàng!');
-console.log('User:', currentUser || 'Chưa đăng nhập');
-// const qrs = await getQRList();
-// console.log(qrs.length);
-if (isAdmin()) {
-    console.log('Admin mode: Bạn có thể xóa tất cả ảnh!');
-}
 function checkSession() {
     const saved = localStorage.getItem('qr_current_user');
     if (saved) {
@@ -221,8 +123,32 @@ function checkSession() {
 }
 
 // ==========================================
-// ===== QR CODE - FIREBASE =====
+// ===== LOADING =====
 // ==========================================
+
+function hideLoading() {
+    var loadingOverlay = document.getElementById('loadingOverlay');
+    if (loadingOverlay) {
+        loadingOverlay.classList.add('hidden');
+        setTimeout(function () {
+            loadingOverlay.style.display = 'none';
+        }, 400);
+    }
+}
+
+function showSkeleton() {
+    var userList = document.getElementById('userList');
+    if (userList) {
+        userList.innerHTML =
+            '<div class="skeleton-grid">' +
+            Array(6).fill(
+                '<div class="skeleton-item"><div class="skeleton-avatar"></div>' +
+                '<div class="skeleton-line"></div><div class="skeleton-line short"></div></div>'
+            ).join('') +
+            '</div>';
+    }
+}
+
 
 async function getQRList(forceRefresh) {
     if (!forceRefresh && qrCache) {
@@ -269,6 +195,40 @@ async function deleteQRCode(id) {
         console.error('Lỗi xóa dữ liệu:', error);
         return false;
     }
+}
+
+/**
+ * compressImageDataUrl — nén dataURL trước khi lưu Firebase
+ */
+function compressImageDataUrl(dataUrl, opts) {
+    opts = opts || {};
+    var maxSide = opts.maxSide || 700;
+    var quality = opts.quality != null ? opts.quality : 0.82;
+    return new Promise(function (resolve, reject) {
+        var img = new Image();
+        img.onload = function () {
+            var w = img.naturalWidth || img.width;
+            var h = img.naturalHeight || img.height;
+            var scale = 1;
+            if (w > maxSide || h > maxSide) scale = maxSide / Math.max(w, h);
+            var tw = Math.max(1, Math.round(w * scale));
+            var th = Math.max(1, Math.round(h * scale));
+            var canvas = document.createElement('canvas');
+            canvas.width = tw;
+            canvas.height = th;
+            var ctx = canvas.getContext('2d');
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(0, 0, tw, th);
+            ctx.drawImage(img, 0, 0, tw, th);
+            try {
+                resolve(canvas.toDataURL('image/jpeg', quality));
+            } catch (e) {
+                resolve(dataUrl);
+            }
+        };
+        img.onerror = function () { resolve(dataUrl); };
+        img.src = dataUrl;
+    });
 }
 
 // ==========================================
@@ -374,7 +334,6 @@ const reader = new ZXing.BrowserQRCodeReader();
 
 try {
     const result = await reader.decodeFromImageElement(img);
-
     resolve({
         valid: true,
         message: "Ảnh QR hợp lệ",
@@ -384,32 +343,28 @@ try {
         qrContent: result.getText()
     });
 } catch (err) {
+    // fallback jsQR nếu có
+    try {
+        if (typeof jsQR === 'function') {
+            const code = jsQR(imageData.data, imageData.width, imageData.height);
+            if (code && code.data) {
+                resolve({
+                    valid: true,
+                    message: 'Ảnh QR hợp lệ',
+                    isSquare: isSquare,
+                    width: this.width,
+                    height: this.height,
+                    qrContent: code.data
+                });
+                return;
+            }
+        }
+    } catch (e2) {}
     resolve({
         valid: false,
         message: "Ảnh không chứa mã QR hợp lệ!"
     });
 }
-
-console.log(code);
-
-// Không đọc được QR
-if (!code) {
-    resolve({
-        valid: false,
-        message: 'Ảnh không chứa mã QR hợp lệ!'
-    });
-    return;
-}
-
-// Đọc được QR
-resolve({
-    valid: true,
-    message: 'Ảnh QR hợp lệ',
-    isSquare: isSquare,
-    width: this.width,
-    height: this.height,
-    qrContent: code.data
-});
         };
         img.onerror = function () {
             resolve({
@@ -558,16 +513,16 @@ const qrBankSelectError = document.getElementById('qrBankError');
 const qrImageError = document.getElementById('qrImageError');
 
 // ===== VALIDATE TÊN NGƯỜI NHẬN =====
-qrNameInput.addEventListener('input', () => {
+qrNameInput && qrNameInput.addEventListener('input', () => {
     validateQrName(false);
 });
 
-qrNameInput.addEventListener('blur', () => {
+qrNameInput && qrNameInput.addEventListener('blur', () => {
     validateQrName(true);
 });
 
 // ===== VALIDATE SỐ TÀI KHOẢN =====
-qrAccountInput.addEventListener('input', function () {
+qrAccountInput && qrAccountInput.addEventListener('input', function () {
     const value = this.value.trim();
 
     if (value && !validateAccountNumber(value)) {
@@ -586,7 +541,7 @@ qrAccountInput.addEventListener('input', function () {
 });
 
 // ===== VALIDATE CHỦ TÀI KHOẢN =====
-qrHolderInput.addEventListener('input', function () {
+qrHolderInput && qrHolderInput.addEventListener('input', function () {
     const value = this.value.trim();
 
     if (value && !validateHolder(value)) {
@@ -605,16 +560,16 @@ qrHolderInput.addEventListener('input', function () {
 });
 
 // ===== VALIDATE NGÂN HÀNG =====
-qrBankSelect.addEventListener('change', function () {
+qrBankSelect && qrBankSelect.addEventListener('change', function () {
     if (this.value) {
         this.classList.remove('error');
         this.classList.add('success');
-        qrBankError.classList.remove('show');
+        qrBankSelectError.classList.remove('show');
     } else {
         this.classList.remove('success');
         this.classList.add('error');
-        qrBankError.textContent = 'Vui lòng chọn tên ngân hàng!';
-        qrBankError.classList.add('show');
+        qrBankSelectError.textContent = 'Vui lòng chọn tên ngân hàng!';
+        qrBankSelectError.classList.add('show');
     }
 });
 
@@ -728,8 +683,10 @@ function showDetail(qr) {
             <div class="bank-name">${qr.bank}</div>
         </div>
         
-        <div class="qr-image-container">
-            <img src="${qr.imageData}" alt="QR Code của ${qr.name}" />
+        <div class="qr-image-container" id="detailQrImageBox">
+            ${qr.imageData
+                ? `<img src="${qr.imageData}" alt="QR Code của ${qr.name}" loading="lazy" decoding="async" />`
+                : `<div class="qr-img-loading" style="padding:40px;text-align:center;color:#64748b;">Đang tải ảnh QR...</div>`}
         </div>
         
         <div class="detail-row">
@@ -770,6 +727,17 @@ function showDetail(qr) {
     detailModal.style.display = 'flex';
 
     document.getElementById('detailClose').addEventListener('click', closeDetail);
+
+    // Nếu mở từ meta-cache (chưa có ảnh) → tải full 1 record
+    if (!qr.imageData && qr.id) {
+        getQRList(true).then(function (list) {
+            var full = list.find(function (x) { return x.id === qr.id; });
+            if (!full || !full.imageData) return;
+            var box = document.getElementById('detailQrImageBox');
+            if (!box) return;
+            box.innerHTML = '<img src="' + full.imageData + '" alt="QR" loading="lazy" decoding="async" />';
+        }).catch(function () {});
+    }
 }
 
 function closeDetail() {
@@ -1030,12 +998,21 @@ uploadForm.addEventListener('submit', async function (e) {
 
     const reader = new FileReader();
     reader.onload = async function (e) {
+        var dataUrl = e.target.result;
+        // Nén ảnh trước khi lưu Firebase (nhanh load sau này)
+        if (typeof compressImageDataUrl === 'function') {
+            try {
+                dataUrl = await compressImageDataUrl(dataUrl, { maxSide: 700, quality: 0.82 });
+            } catch (err) {
+                console.warn('compress skip', err);
+            }
+        }
         await addQRCode({
             name: name,
             bank: bank,
             accountNumber: finalAccount,
             accountHolder: finalHolder,
-            imageData: e.target.result
+            imageData: dataUrl
         });
 
         uploadModal.style.display = 'none';
@@ -1243,15 +1220,20 @@ logoutBtn.addEventListener('click', function () {
 
 // Chỉ đóng detail/auth modal bằng nút X
 
+
 // ==========================================
 // ===== KHỞI CHẠY =====
 // ==========================================
 
 checkSession();
 updateUI();
-console.log('QR Bank Storage - Firebase đã sẵn sàng!');
-console.log('User:', currentUser || 'Chưa đăng nhập');
-console.log('Số QR:', getQRList().length);
-if (isAdmin()) {
-    console.log('Admin mode: Bạn có thể xóa tất cả ảnh!');
-}
+getQRList().then(function () {
+    hideLoading();
+    renderUserList(searchInput ? searchInput.value : '');
+}).catch(function (e) {
+    console.error(e);
+    hideLoading();
+    renderUserList('');
+});
+setTimeout(hideLoading, 4000);
+console.log('QR Manage ready');
